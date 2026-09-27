@@ -2026,3 +2026,42 @@ main > section.tl-page-shell.tl-page-shell.tl-page-shell--narrow{
 .tl-pub-card h2 i{
   line-height:1;
 }
+
+
+/* ===== Icon QA pass 2: remaining navigation, news and social glyphs ===== */
+.tl-news-card__media>span>i,
+.tl-socials a>i,
+.tl-drawer__nav a>i,
+.tl-back-link>i,
+.tl-copy-button>i,
+.tl-source-card .tl-button i,
+.tl-apply-card .tl-button i{
+  display:block;
+  line-height:1;
+  text-align:center;
+}
+.tl-news-card__media>span>i::before,
+.tl-socials a>i::before,
+.tl-drawer__nav a>i::before,
+.tl-back-link>i::before,
+.tl-copy-button>i::before{
+  display:block;
+  line-height:1;
+}
+.tl-socials a>i{
+  flex:0 0 1.05em;
+  width:1.05em;
+}
+.tl-drawer__nav a>i{
+  width:18px;
+  height:18px;
+  display:grid;
+  place-items:center;
+  justify-self:end;
+}
+.tl-news-card__media>span{
+  line-height:1;
+}
+.tl-news-card__media>span>i{
+  margin:0;
+}
