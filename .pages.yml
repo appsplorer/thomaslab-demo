@@ -157,8 +157,21 @@ content:
       - { name: email, type: string }
       - { name: phone, type: string }
       - { name: office, type: string }
+      - { name: linkedin, label: LinkedIn URL, type: string }
+      - { name: google_scholar, label: Google Scholar URL, type: string }
+      - { name: orcid, label: ORCID URL, type: string }
+      - { name: github, label: GitHub URL, type: string }
+      - { name: website, label: Personal / faculty website, type: string }
+      - name: cv
+        label: CV / résumé PDF
+        type: file
+        options:
+          media: pdfs
+          extensions: [pdf]
+          rename: safe
       - { name: research_topics, type: string, list: true }
       - { name: current_projects, label: Current project slugs, type: string, list: true, description: "Use project slugs from the Projects editor." }
+      - { name: selected_publications, label: Selected publication slugs, type: string, list: true, description: "Optional. Leave empty to auto-detect publications from the author name when possible." }
       - { name: research_statement, label: Research statement, type: text }
       - { name: short_bio, label: Short biography, type: text }
       - name: bio_html
@@ -168,6 +181,17 @@ content:
           format: html
           media: images
           rename: safe
+      - name: honors
+        label: Awards & honors
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{year} · {title}"
+        fields:
+          - { name: year, type: string }
+          - { name: title, type: string, required: true }
+          - { name: detail, type: string }
       - name: education
         type: object
         list:
