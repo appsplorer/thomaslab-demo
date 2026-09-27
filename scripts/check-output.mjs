@@ -13,7 +13,16 @@ function walk(dir){
 }
 walk(OUT);
 const htmlFiles=files.filter(f=>f.endsWith(".html"));
-if(htmlFiles.length<10) fail("Unexpectedly small generated site: "+htmlFiles.length+" HTML files");
+if(htmlFiles.length<20) fail("Unexpectedly small generated site: "+htmlFiles.length+" HTML files");
+
+const datasets=["publications","people","news","projects","opportunities"];
+for(const name of datasets){
+  const rows=JSON.parse(fs.readFileSync(path.join(process.cwd(),"data",name+".json"),"utf8"));
+  for(const row of rows){
+    const expected=path.join(OUT,name,row.slug,"index.html");
+    if(!fs.existsSync(expected)) fail("Missing generated detail page: "+path.relative(OUT,expected));
+  }
+}
 
 const localTarget=(raw)=>{
   const clean=raw.split("#")[0].split("?")[0];
@@ -32,6 +41,21 @@ for(const file of htmlFiles){
     if(html.includes(marker)) fail(path.relative(OUT,file)+" still contains placeholder text: "+marker);
   }
   if(/javascript\s*:/i.test(html)) fail(path.relative(OUT,file)+" contains javascript: URL");
+  if(/<a\b[^>]*href=["']\s*(?:#)?\s*["']/i.test(html)) fail(path.relative(OUT,file)+" contains an empty link");
+  const ids=[...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(m=>m[1]);
+  const seenIds=new Set();
+  for(const id of ids){
+    if(seenIds.has(id)) fail(path.relative(OUT,file)+" contains duplicate id: "+id);
+    seenIds.add(id);
+  }
+  const headings=[...html.matchAll(/<h([1-6])\b/gi)].map(m=>Number(m[1]));
+  if(headings.length){
+    if(headings[0]!==1) fail(path.relative(OUT,file)+" must start its heading outline with h1");
+    if(headings.filter(x=>x===1).length!==1) fail(path.relative(OUT,file)+" must contain exactly one h1");
+    for(let i=1;i<headings.length;i++){
+      if(headings[i]>headings[i-1]+1) fail(path.relative(OUT,file)+" skips heading level h"+headings[i-1]+" -> h"+headings[i]);
+    }
+  }
   const attrs=[...html.matchAll(/\b(?:href|src)=["']([^"']+)["']/gi)].map(m=>m[1]);
   for(const value of attrs){
     const target=localTarget(value);
