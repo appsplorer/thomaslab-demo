@@ -55,7 +55,7 @@ for(const file of htmlFiles){
   const csp=[...html.matchAll(/<meta\b[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>/gi)];
   if(csp.length!==1) fail(path.relative(OUT,file)+" must contain exactly one Content-Security-Policy meta tag");
   if(/'unsafe-inline'|'unsafe-eval'/i.test(csp[0][0])) fail(path.relative(OUT,file)+" has an unsafe CSP allowance");
-  for(const directive of ["default-src 'self'","base-uri 'none'","object-src 'none'","script-src-attr 'none'","frame-src 'none'","worker-src 'none'","form-action 'none'","require-trusted-types-for 'script'"]){
+  for(const directive of ["default-src 'self'","base-uri 'none'","object-src 'none'","script-src-attr 'none'","style-src 'self'","font-src 'self'","img-src 'self' data:","frame-src 'none'","worker-src 'none'","form-action 'none'","require-trusted-types-for 'script'"]){
     if(!csp[0][0].includes(directive)) fail(path.relative(OUT,file)+" CSP is missing: "+directive);
   }
   if(!/<meta\b[^>]*name=["']referrer["'][^>]*content=["']strict-origin-when-cross-origin["']/i.test(html)) fail(path.relative(OUT,file)+" is missing the referrer policy meta tag");
@@ -120,11 +120,14 @@ for(const file of htmlFiles){
   }
   for(const tag of html.matchAll(/<img\b[^>]*>/gi)){
     if(!/\balt=["'][^"']*["']/i.test(tag[0])) fail(path.relative(OUT,file)+" has image without alt attribute");
+    if(/\bsrc=["']https?:\/\//i.test(tag[0])) fail(path.relative(OUT,file)+" contains a remote runtime image");
   }
 }
 for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg","assets/vendor/fontawesome/css/all.min.css","assets/vendor/fontawesome/webfonts/fa-brands-400.woff2","assets/vendor/fontawesome/webfonts/fa-regular-400.woff2","assets/vendor/fontawesome/webfonts/fa-solid-900.woff2","assets/vendor/fontawesome/webfonts/fa-v4compatibility.woff2","SECURITY.md",".well-known/security.txt"]){
   if(!fs.existsSync(path.join(OUT,required))) fail("Missing generated asset: "+required);
 }
+if(fs.existsSync(path.join(OUT,"media/documents"))) fail("Production output must not publish the unused media/documents directory");
+if(files.some(f=>path.basename(f)===".gitkeep")) fail("Production output must not publish repository placeholder files");
 const js=fs.readFileSync(path.join(OUT,"assets/js/site.js"),"utf8");
 for(const sink of ["innerHTML","outerHTML","insertAdjacentHTML","eval(","new Function","document.write"]){
   if(js.includes(sink)) fail("Production JavaScript contains disallowed DOM/code sink: "+sink);
