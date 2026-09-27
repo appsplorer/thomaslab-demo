@@ -21,6 +21,10 @@ for(const name of datasets){
   for(const row of rows){
     const expected=path.join(OUT,name,row.slug,"index.html");
     if(!fs.existsSync(expected)) fail("Missing generated detail page: "+path.relative(OUT,expected));
+    const html=fs.readFileSync(expected,"utf8");
+    const sectionHref=(BASE||"")+"/"+name+"/";
+    const activeLink='<a href="'+sectionHref+'" aria-current="page">';
+    if(!html.includes(activeLink)) fail(path.relative(OUT,expected)+" does not mark "+name+" navigation active");
   }
 }
 
