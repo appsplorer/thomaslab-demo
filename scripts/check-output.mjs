@@ -41,7 +41,7 @@ const localTarget=(raw)=>{
 
 for(const file of htmlFiles){
   const html=fs.readFileSync(file,"utf8");
-  for(const marker of ["Sample Member","Research update 1","Structured content is being migrated"]){
+  for(const marker of ["Sample Member","Research update 1","Structured content is being migrated","through the admin panel","easy to maintain"]){
     if(html.includes(marker)) fail(path.relative(OUT,file)+" still contains placeholder text: "+marker);
   }
   if(/javascript\s*:/i.test(html)) fail(path.relative(OUT,file)+" contains javascript: URL");
