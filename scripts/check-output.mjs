@@ -60,8 +60,11 @@ for(const file of htmlFiles){
   }
   if(!/<meta\b[^>]*name=["']referrer["'][^>]*content=["']strict-origin-when-cross-origin["']/i.test(html)) fail(path.relative(OUT,file)+" is missing the referrer policy meta tag");
   if(!csp[0][0].includes("style-src 'self'") || !csp[0][0].includes("font-src 'self'")) fail(path.relative(OUT,file)+" CSP must keep styles and fonts same-origin");
-  for(const tag of html.matchAll(/<(?:script|link)\b[^>]*(?:src|href)=["']https?:\/\/[^"']+["'][^>]*>/gi)){
-    fail(path.relative(OUT,file)+" contains a third-party runtime script/stylesheet: "+tag[0]);
+  for(const match of html.matchAll(/<script\b[^>]*>/gi)){
+    if(/\bsrc=["']https?:\/\//i.test(match[0])) fail(path.relative(OUT,file)+" contains a third-party runtime script: "+match[0]);
+  }
+  for(const match of html.matchAll(/<link\b[^>]*>/gi)){
+    if(/\brel=["'][^"']*stylesheet[^"']*["']/i.test(match[0]) && /\bhref=["']https?:\/\//i.test(match[0])) fail(path.relative(OUT,file)+" contains a third-party runtime stylesheet: "+match[0]);
   }
   const faLink=html.match(/<link\b[^>]*href=["'][^"']*\/assets\/vendor\/fontawesome\/css\/all\.min\.css["'][^>]*>/i)?.[0]||"";
   if(!faLink || !/integrity=["']sha384-[^"']+["']/i.test(faLink)) fail(path.relative(OUT,file)+" self-hosted Font Awesome stylesheet is missing SRI");
