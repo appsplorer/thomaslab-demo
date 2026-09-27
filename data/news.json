@@ -1,0 +1,56 @@
+[
+  {
+    "slug": "cameron-thomas-joins-uga",
+    "date": "2025-10-08",
+    "category": "Lab Update",
+    "title": "Cameron Thomas joins the UGA College of Pharmacy",
+    "description": "The University of Georgia College of Pharmacy welcomed Cameron D. Thomas, PharmD, PhD, as an Assistant Professor in Clinical and Administrative Pharmacy.",
+    "image": "",
+    "author": "Thomas Lab",
+    "tags": [
+      "UGA",
+      "Lab Update",
+      "Precision Medicine"
+    ],
+    "body_html": "<p>Dr. Cameron D. Thomas joined the University of Georgia College of Pharmacy as an Assistant Professor in the Department of Clinical and Administrative Pharmacy.</p><p>His research program focuses on precision therapeutics, pharmacogenomics, cardiovascular pharmacotherapy, real-world evidence, and computational approaches that can improve medication selection and safety.</p>",
+    "external_url": "https://rx.uga.edu/welcome-new-employee-cameron-thomas/",
+    "external_label": "UGA College of Pharmacy",
+    "featured": true
+  },
+  {
+    "slug": "jacc-advances-socioeconomic-deprivation-publication",
+    "date": "2026-02-03",
+    "category": "Publication",
+    "title": "New JACC: Advances publication examines socioeconomic deprivation after PCI",
+    "description": "A new study coauthored by Dr. Thomas examines post-PCI outcomes in the context of area-level socioeconomic deprivation and P2Y12 inhibitor therapy.",
+    "image": "",
+    "author": "Thomas Lab",
+    "tags": [
+      "Cardiovascular",
+      "Real-World Evidence",
+      "Pharmacotherapy"
+    ],
+    "body_html": "<p>The study evaluates how area-level socioeconomic deprivation relates to outcomes after percutaneous coronary intervention and examines those patterns across P2Y12 inhibitor treatment groups.</p><p>The work contributes to the lab’s broader interest in connecting medication effectiveness, cardiovascular outcomes, and real-world patient context.</p>",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/41638031/",
+    "external_label": "PubMed",
+    "featured": true
+  },
+  {
+    "slug": "rural-engagement-workshop",
+    "date": "2026-04-22",
+    "category": "Media",
+    "title": "Connecting precision medicine research with rural Georgia",
+    "description": "UGA’s rural engagement programming highlights how faculty can connect research expertise with communities across Georgia.",
+    "image": "",
+    "author": "Thomas Lab",
+    "tags": [
+      "Precision Medicine",
+      "Rural Health",
+      "Community Engagement"
+    ],
+    "body_html": "<p>Community-engaged research is essential when precision medicine is intended to improve care across diverse clinical settings.</p><p>This update highlights UGA’s rural engagement work and the broader opportunity to connect data-driven therapeutics research with the needs of communities across Georgia.</p>",
+    "external_url": "https://news.uga.edu/uga-rural-engagement-workshop-empowers-faculty-to-connect-with-communities/",
+    "external_label": "UGA Today",
+    "featured": true
+  }
+]
