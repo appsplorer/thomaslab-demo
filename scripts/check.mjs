@@ -15,6 +15,12 @@ function httpsUrl(value){
     return u.protocol==="https:" && !u.username && !u.password;
   }catch{return false}
 }
+function safeLinkUrl(value){
+  try{
+    const u=new URL(String(value));
+    return ["https:","mailto:","tel:"].includes(u.protocol) && !u.username && !u.password;
+  }catch{return false}
+}
 function localPath(value,prefix){
   const v=String(value||"");
   return v.startsWith(prefix) && !v.includes("..") && !v.includes("\\") && !/[?#]/.test(v);
@@ -50,7 +56,7 @@ for(const name of datasetNames){
       if(value && !httpsUrl(value)) fail(label+"."+key+" must be an HTTPS URL without embedded credentials");
     }
     for(const [j,link] of (row.links||[]).entries()){
-      if(link.url && !httpsUrl(link.url)) fail(label+".links["+j+"] must be an HTTPS URL without embedded credentials");
+      if(link.url && !safeLinkUrl(link.url)) fail(label+".links["+j+"] must use HTTPS, mailto, or tel without embedded credentials");
       checkIcon(link.icon,label+".links["+j+"].icon");
     }
     for(const key of ["body_html","bio_html"]){
