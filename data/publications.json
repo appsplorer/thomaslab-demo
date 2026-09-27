@@ -1,0 +1,154 @@
+[
+  {
+    "slug": "socioeconomic-deprivation-post-pci-2026",
+    "year": 2026,
+    "title": "Impact of Area-Level Socioeconomic Deprivation on Post-PCI Outcomes Stratified by P2Y12 Inhibitor Therapy",
+    "venue": "JACC: Advances",
+    "authors": "Jean G. Malavé, Cameron D. Thomas, et al.",
+    "doi": "10.1016/j.jacadv.2025.102577",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/41638031/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/41638031/",
+    "pdf": "",
+    "type": "Original Research",
+    "topics": [
+      "Cardiovascular",
+      "Real-World Evidence",
+      "Pharmacotherapy"
+    ],
+    "summary": "Evaluates associations between area-level socioeconomic deprivation and outcomes after PCI, including analyses stratified by P2Y12 inhibitor therapy.",
+    "featured": true
+  },
+  {
+    "slug": "race-platelet-reactivity-clopidogrel-2026",
+    "year": 2026,
+    "title": "Impact of Race on Profiles of Platelet Reactivity and Clinical Outcomes in Clopidogrel-Treated Participants",
+    "venue": "Clinical Pharmacology & Therapeutics",
+    "authors": "Luis Ortega-Paz, Cameron D. Thomas, et al.",
+    "doi": "10.1002/cpt.70045",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/40875095/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/40875095/",
+    "pdf": "",
+    "type": "Original Research",
+    "topics": [
+      "Pharmacogenomics",
+      "Cardiovascular",
+      "Precision Medicine"
+    ],
+    "summary": "Examines platelet-reactivity profiles and clinical outcomes among clopidogrel-treated participants, with attention to differences across patient groups.",
+    "featured": true
+  },
+  {
+    "slug": "cyp2c19-maintenance-clopidogrel-2025",
+    "year": 2025,
+    "title": "CYP2C19 Phenotype, P2Y12 Inhibitor Selection, and Clinical Outcomes in Patients on Maintenance Clopidogrel Therapy",
+    "venue": "Journal of the American Heart Association",
+    "authors": "Rajiv C. Patel, Cameron D. Thomas, et al.",
+    "doi": "10.1161/JAHA.125.041634",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/40611487/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/40611487/",
+    "pdf": "",
+    "type": "Original Research",
+    "topics": [
+      "Pharmacogenomics",
+      "Cardiovascular",
+      "Precision Medicine"
+    ],
+    "summary": "Studies CYP2C19 phenotype, antiplatelet selection, and clinical outcomes in patients receiving maintenance clopidogrel therapy.",
+    "featured": true
+  },
+  {
+    "slug": "abcd-gene-clopidogrel-effectiveness-2024",
+    "year": 2024,
+    "title": "Effectiveness of Clopidogrel vs Alternative P2Y12 Inhibitors Based on the ABCD-GENE Score",
+    "venue": "Journal of the American College of Cardiology",
+    "authors": "Cameron D. Thomas, Francesco Franchi, et al.",
+    "doi": "10.1016/j.jacc.2024.02.015",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/38599713/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/38599713/",
+    "pdf": "",
+    "type": "Original Research",
+    "topics": [
+      "Cardiovascular",
+      "Real-World Evidence",
+      "Precision Medicine"
+    ],
+    "summary": "A real-world investigation of clopidogrel effectiveness compared with alternative P2Y12 inhibitors across ABCD-GENE risk strata.",
+    "featured": true
+  },
+  {
+    "slug": "p2y12-pharmacogenetics-review-2023",
+    "year": 2023,
+    "title": "Pharmacogenetics of P2Y12 Receptor Inhibitors",
+    "venue": "Pharmacotherapy",
+    "authors": "Cameron D. Thomas, Alexis K. Williams, Craig R. Lee, Larisa H. Cavallari",
+    "doi": "10.1002/phar.2758",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/36588476/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/36588476/",
+    "pdf": "",
+    "type": "Review",
+    "topics": [
+      "Pharmacogenomics",
+      "Cardiovascular",
+      "Precision Medicine"
+    ],
+    "summary": "Reviews pharmacogenetic evidence relevant to P2Y12 receptor inhibitors and the clinical translation of genotype-informed antiplatelet therapy.",
+    "featured": false
+  },
+  {
+    "slug": "cyp2c19-guided-antiplatelet-2022",
+    "year": 2022,
+    "title": "CYP2C19 Genotype-Guided Antiplatelet Therapy After Percutaneous Coronary Intervention in Diverse Clinical Settings",
+    "venue": "Journal of the American Heart Association",
+    "authors": "Amber L. Beitelshees, Cameron D. Thomas, et al.",
+    "doi": "10.1161/JAHA.121.024159",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/35156424/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/35156424/",
+    "pdf": "",
+    "type": "Original Research",
+    "topics": [
+      "Pharmacogenomics",
+      "Cardiovascular",
+      "Implementation"
+    ],
+    "summary": "Reports outcomes associated with CYP2C19 genotype-guided antiplatelet therapy after PCI across diverse clinical implementation settings.",
+    "featured": false
+  },
+  {
+    "slug": "cpic-cyp2c19-ppi-2021",
+    "year": 2021,
+    "title": "Clinical Pharmacogenetics Implementation Consortium (CPIC) Guideline for CYP2C19 and Proton Pump Inhibitor Dosing",
+    "venue": "Clinical Pharmacology & Therapeutics",
+    "authors": "John J. Lima, Cameron D. Thomas, et al.",
+    "doi": "10.1002/cpt.2015",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/32770672/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/32770672/",
+    "pdf": "",
+    "type": "Guideline",
+    "topics": [
+      "Pharmacogenomics",
+      "Clinical Implementation",
+      "Precision Medicine"
+    ],
+    "summary": "Provides CPIC recommendations for incorporating CYP2C19 genotype information into proton pump inhibitor dosing decisions.",
+    "featured": false
+  },
+  {
+    "slug": "metoprolol-cyp2d6-2020",
+    "year": 2020,
+    "title": "Examination of Metoprolol Pharmacokinetics and Pharmacodynamics Across CYP2D6 Genotype-Derived Activity Scores",
+    "venue": "CPT: Pharmacometrics & Systems Pharmacology",
+    "authors": "Cameron D. Thomas, Scott A. Mosley, et al.",
+    "doi": "10.1002/psp4.12563",
+    "pubmed": "https://pubmed.ncbi.nlm.nih.gov/33067866/",
+    "external_url": "https://pubmed.ncbi.nlm.nih.gov/33067866/",
+    "pdf": "",
+    "type": "Original Research",
+    "topics": [
+      "Pharmacogenomics",
+      "Pharmacokinetics",
+      "Cardiovascular"
+    ],
+    "summary": "Examines metoprolol pharmacokinetic and pharmacodynamic differences across CYP2D6 genotype-derived activity scores.",
+    "featured": false
+  }
+]
