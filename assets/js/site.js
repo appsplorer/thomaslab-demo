@@ -231,16 +231,29 @@ document.addEventListener("click",(event)=>{
 
   const backTop = document.querySelector('[data-backtop]');
   if (backTop) {
+    const scrollPosition = () => Math.max(
+      window.scrollY || 0,
+      document.documentElement.scrollTop || 0,
+      document.body.scrollTop || 0
+    );
     const syncBackTop = () => {
-      const show = window.scrollY > Math.max(520, window.innerHeight * 0.7);
+      const show = scrollPosition() > Math.max(520, window.innerHeight * 0.7);
       backTop.classList.toggle('is-visible', show);
       backTop.tabIndex = show ? 0 : -1;
       backTop.setAttribute('aria-hidden', show ? 'false' : 'true');
     };
     syncBackTop();
     window.addEventListener('scroll', syncBackTop, { passive: true });
+    document.addEventListener('scroll', syncBackTop, { passive: true, capture: true });
     backTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      window.scrollTo({ top: 0, behavior });
+      document.documentElement.scrollTo?.({ top: 0, behavior });
+      document.body.scrollTo?.({ top: 0, behavior });
+      if (behavior === 'auto') {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
     });
   }
 })();
