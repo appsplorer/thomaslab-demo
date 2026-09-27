@@ -1,16 +1,13 @@
-# Thomas Lab Demo
+# Thomas Lab Website
 
-Standalone light-theme demo for the Thomas Lab website.
+Production-oriented static lab website for Thomas Lab at the University of Georgia College of Pharmacy. Content is separated from presentation so Pages CMS can maintain lab information without editing HTML.
 
-## Live preview
+## Architecture
 
-- Temporary CDN preview: https://raw.githack.com/appsplorer/thomaslab-demo/main/index.html
-- GitHub Pages target: https://appsplorer.github.io/thomaslab-demo/
+- `data/` — editable structured lab content
+- `assets/` — shared light-theme CSS and interaction JavaScript
+- `scripts/build.mjs` — dependency-free static generator
+- `_site/` — generated during GitHub Actions deployment only
+- `.pages.yml` — Pages CMS admin configuration (completed in Part 6)
 
-The repository contains the prebuilt responsive demo pages for Home, Research, Publications, Projects, People, News, Opportunities, Contact, and 404.
-
-## GitHub Pages
-
-The deployment workflow is already included at `.github/workflows/deploy.yml`.
-
-For first-time Pages activation, open **Settings → Pages → Build and deployment → Source → GitHub Actions**. After that, rerun the existing workflow and the Pages URL above will publish.
+The deployment is intentionally database-free and produces static HTML for speed, security, and SEO.

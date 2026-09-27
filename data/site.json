@@ -1,0 +1,89 @@
+{
+  "name": "Thomas Lab",
+  "short_name": "TL",
+  "affiliation": "University of Georgia · College of Pharmacy",
+  "department": "Department of Clinical & Administrative Pharmacy",
+  "university": "University of Georgia",
+  "location": "Athens, Georgia",
+  "email": "CDThomas@uga.edu",
+  "phone": "+1 706-542-7412",
+  "office": "R.C. Wilson, Room 270E",
+  "tagline": "Precision therapeutics through data, genomics, and AI.",
+  "site_url": "https://appsplorer.github.io/thomaslab-demo",
+  "hero": {
+    "eyebrow": "Computational precision medicine · Clinical AI · Real-world evidence",
+    "title_prefix": "From clinical data to",
+    "title_highlight": "decisions that matter.",
+    "summary": "We develop rigorous computational methods that connect pharmacogenomics, electronic health records, and real-world evidence to improve medication safety and individualize treatment.",
+    "primary_label": "Explore our research",
+    "primary_href": "/research/",
+    "secondary_label": "Meet the lab",
+    "secondary_href": "/people/"
+  },
+  "research_areas": [
+    {
+      "number": "01",
+      "title": "Pharmacogenomics",
+      "icon": "fa-solid fa-dna",
+      "description": "Understanding how genetic variation shapes medication response and translating that evidence into better treatment decisions."
+    },
+    {
+      "number": "02",
+      "title": "Clinical NLP",
+      "icon": "fa-solid fa-file-waveform",
+      "description": "Extracting actionable phenotypes and adverse events from unstructured clinical narratives with reproducible NLP methods."
+    },
+    {
+      "number": "03",
+      "title": "Healthcare AI",
+      "icon": "fa-solid fa-brain",
+      "description": "Building transparent machine-learning systems for clinical risk stratification, outcome prediction, and decision support."
+    },
+    {
+      "number": "04",
+      "title": "Real-World Evidence",
+      "icon": "fa-solid fa-chart-line",
+      "description": "Integrating EHR, claims, structured, and unstructured data to evaluate treatment effectiveness and safety in practice."
+    },
+    {
+      "number": "05",
+      "title": "Cardiovascular Precision Medicine",
+      "icon": "fa-solid fa-heart-pulse",
+      "description": "Personalizing antiplatelet therapy and cardiovascular pharmacotherapy using clinical, genetic, and real-world signals."
+    },
+    {
+      "number": "06",
+      "title": "Medication Safety",
+      "icon": "fa-solid fa-shield-heart",
+      "description": "Detecting adverse drug outcomes and balancing efficacy against safety at the individual-patient level."
+    }
+  ],
+  "socials": [
+    {
+      "label": "UGA profile",
+      "url": "https://rx.uga.edu/faculty-member/cameron-thomas-pharm-d-ph-d/",
+      "icon": "fa-solid fa-building-columns"
+    },
+    {
+      "label": "ORCID",
+      "url": "https://orcid.org/0000-0001-5040-2313",
+      "icon": "fa-brands fa-orcid"
+    }
+  ],
+  "seo": {
+    "title": "Thomas Lab — Precision Therapeutics, Pharmacogenomics & Clinical AI",
+    "description": "Thomas Lab at the University of Georgia College of Pharmacy develops research in pharmacogenomics, precision medicine, clinical NLP, healthcare AI, real-world evidence, and medication safety.",
+    "keywords": [
+      "Thomas Lab",
+      "Cameron Thomas",
+      "University of Georgia",
+      "UGA College of Pharmacy",
+      "pharmacogenomics",
+      "precision medicine",
+      "clinical NLP",
+      "healthcare AI",
+      "real-world evidence",
+      "medication safety"
+    ]
+  }
+}
