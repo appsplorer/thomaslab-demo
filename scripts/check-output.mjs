@@ -126,6 +126,8 @@ for(const file of htmlFiles){
   }
 }
 const homeHtml=fs.readFileSync(path.join(OUT,"index.html"),"utf8");
+if(!homeHtml.includes("tl-footer-orbit")) fail("Homepage footer is missing the orbital research pathway");
+if(/class=["'][^"']*signal-line/.test(homeHtml)) fail("Legacy linear footer signal is still present");
 const renderedGalleryPhotos=(homeHtml.match(/\bdata-gallery-item\b/g)||[]).length;
 if(expectedGalleryPhotos!==renderedGalleryPhotos) fail("Homepage gallery rendered "+renderedGalleryPhotos+" photos but "+expectedGalleryPhotos+" are visible in site.json");
 if(siteData.gallery?.enabled===false && /id=["']lab-life["']/.test(homeHtml)) fail("Homepage gallery is disabled but still rendered");

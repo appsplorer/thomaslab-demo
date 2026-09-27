@@ -2732,3 +2732,336 @@ html.tl-lightbox-open{overflow:hidden}
   .tl-gallery-lightbox__close,
   .tl-gallery-lightbox__nav{transition:none!important}
 }
+
+
+/* ===== Final orbital motion system + footer research pathway ===== */
+/* Interior-page orbital mark: rotation must remain visually readable, not a static circle. */
+.tl-page-hero:after{
+  border-top-color:transparent!important;
+  border-left-color:rgba(186,12,47,.18)!important;
+  animation:tlOrbitSpin 34s linear infinite;
+  transform-origin:center;
+  will-change:transform;
+}
+
+/* Project-card orbital system. */
+.tl-project-signal>span:nth-of-type(1){
+  animation:tlOrbitSpin 18s linear infinite;
+  will-change:transform;
+}
+.tl-project-signal>span:nth-of-type(2){
+  border-top-color:rgba(31,86,104,.34);
+  border-bottom-color:rgba(31,86,104,.06);
+  animation:tlOrbitSpinReverse 14s linear infinite;
+  will-change:transform;
+}
+.tl-project-signal>span:nth-of-type(3){
+  left:50%!important;
+  top:50%!important;
+  right:auto!important;
+  bottom:auto!important;
+  margin:-4px 0 0 -4px;
+  animation:tlProjectOrbitNode 8.5s linear infinite;
+  will-change:transform;
+}
+
+/* Research-pillar graphics: outer, middle and inner trajectories move independently. */
+.tl-research-detail__orbit{
+  animation:tlOrbitSpin 32s linear infinite;
+  will-change:transform;
+}
+.tl-research-detail__orbit:before{
+  border-top-color:rgba(31,86,104,.34);
+  animation:tlOrbitSpinReverse 17s linear infinite;
+}
+.tl-research-detail__orbit:after{
+  border-right-color:rgba(186,12,47,.28);
+  animation:tlOrbitSpin 13s linear infinite;
+}
+
+/* Homepage gallery placeholder uses real orbital travel rather than static dots. */
+.tl-gallery-empty__signal{
+  animation:tlOrbitSpin 28s linear infinite;
+  will-change:transform;
+}
+.tl-gallery-empty__signal::before{
+  border-top-color:rgba(55,88,99,.34);
+  animation:tlOrbitSpinReverse 17s linear infinite;
+}
+.tl-gallery-empty__signal::after{
+  border-right-color:rgba(186,12,47,.26);
+  animation:tlOrbitSpin 12s linear infinite;
+}
+.tl-gallery-empty__signal i{
+  left:50%!important;
+  top:50%!important;
+  right:auto!important;
+  bottom:auto!important;
+  margin:-4px 0 0 -4px;
+  box-shadow:0 0 0 5px rgba(186,12,47,.055);
+}
+.tl-gallery-empty__signal i:nth-child(1){
+  --tl-orbit-radius:86px;
+  animation:tlGenericOrbitNode 10s linear infinite;
+}
+.tl-gallery-empty__signal i:nth-child(2){
+  --tl-orbit-radius:62px;
+  background:#d45970;
+  animation:tlGenericOrbitNodeReverse 7.5s linear infinite;
+}
+.tl-gallery-empty__signal i:nth-child(3){
+  --tl-orbit-radius:36px;
+  width:6px;
+  height:6px;
+  margin:-3px 0 0 -3px;
+  animation:tlGenericOrbitNode 5.5s linear infinite;
+}
+
+/* Join-panel rings are now visibly orbital; each ring carries a moving node. */
+.tl-join__rings span{
+  animation:tlOrbitSpin 28s linear infinite!important;
+  transform-origin:center;
+}
+.tl-join__rings span:nth-child(2){
+  animation:tlOrbitSpinReverse 21s linear infinite!important;
+}
+.tl-join__rings span:nth-child(3){
+  animation:tlOrbitSpin 15s linear infinite!important;
+}
+.tl-join__rings span:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-4px;
+  width:8px;
+  height:8px;
+  margin-left:-4px;
+  border-radius:50%;
+  background:var(--uga-red);
+  box-shadow:0 0 0 5px rgba(186,12,47,.055);
+}
+
+/* Footer: replace the legacy horizontal signal with a compact orbital research pathway. */
+.tl-footer__grid{
+  grid-template-columns:minmax(250px,1.35fr) minmax(110px,.46fr) minmax(110px,.46fr) minmax(320px,1.05fr);
+  gap:clamp(28px,4vw,56px);
+  align-items:start;
+}
+.tl-footer__signal{
+  position:relative;
+  min-width:0;
+  min-height:154px;
+  display:grid;
+  grid-template-columns:118px minmax(0,1fr);
+  gap:20px;
+  align-items:center;
+  padding:18px 20px!important;
+  overflow:hidden;
+  border:1px solid #ddd7cf;
+  border-radius:19px;
+  background:
+    radial-gradient(280px circle at 15% 50%,rgba(186,12,47,.07),transparent 58%),
+    rgba(255,255,255,.48);
+  box-shadow:0 14px 38px rgba(56,45,40,.045);
+}
+.tl-footer__signal:after{
+  content:"";
+  position:absolute;
+  width:130px;
+  height:130px;
+  right:-82px;
+  bottom:-88px;
+  border-radius:50%;
+  background:rgba(186,12,47,.045);
+}
+.tl-footer-orbit{
+  position:relative;
+  width:112px;
+  height:112px;
+  display:grid;
+  place-items:center;
+}
+.tl-footer-orbit__ring{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  will-change:transform;
+}
+.tl-footer-orbit__ring--outer{
+  inset:0;
+  border:1px solid rgba(186,12,47,.20);
+  border-top-color:transparent;
+  animation:tlOrbitSpin 20s linear infinite;
+}
+.tl-footer-orbit__ring--middle{
+  inset:15px;
+  border:1px dashed rgba(88,111,119,.20);
+  border-right-color:rgba(88,111,119,.42);
+  animation:tlOrbitSpinReverse 14s linear infinite;
+}
+.tl-footer-orbit__ring--inner{
+  inset:31px;
+  border:1px solid rgba(186,12,47,.13);
+  border-bottom-color:rgba(186,12,47,.42);
+  animation:tlOrbitSpin 9s linear infinite;
+}
+.tl-footer-orbit__node{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:3;
+  width:7px;
+  height:7px;
+  margin:-3.5px 0 0 -3.5px;
+  border-radius:50%;
+  background:var(--uga-red);
+  box-shadow:0 0 0 5px rgba(186,12,47,.055),0 0 15px rgba(186,12,47,.16);
+  will-change:transform;
+}
+.tl-footer-orbit__node--1{
+  --tl-orbit-radius:54px;
+  animation:tlGenericOrbitNode 8s linear infinite;
+}
+.tl-footer-orbit__node--2{
+  --tl-orbit-radius:38px;
+  width:6px;
+  height:6px;
+  margin:-3px 0 0 -3px;
+  background:#d05b70;
+  animation:tlGenericOrbitNodeReverse 5.8s linear infinite;
+}
+.tl-footer-orbit__core{
+  position:relative;
+  z-index:4;
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(186,12,47,.16);
+  border-radius:50%;
+  background:#fff;
+  color:var(--uga-red);
+  box-shadow:0 8px 20px rgba(56,45,40,.065);
+}
+.tl-footer-orbit__core i{display:block;line-height:1}
+.tl-footer__signal-copy{
+  position:relative;
+  z-index:2;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+.tl-footer__signal-copy>span{
+  margin-bottom:8px;
+  color:var(--uga-red);
+  font-size:.55rem;
+  font-weight:850;
+  letter-spacing:.105em;
+  text-transform:uppercase;
+}
+.tl-footer__signal-copy strong{
+  color:#24201d;
+  font:700 clamp(1.05rem,1.5vw,1.3rem)/1.12 var(--title);
+  letter-spacing:-.025em;
+}
+.tl-footer__signal-copy small{
+  max-width:260px;
+  margin-top:8px;
+  color:#817a73;
+  font-size:.62rem;
+  line-height:1.55;
+}
+.tl-footer__bottom{
+  margin-top:48px;
+}
+
+/* Explicit orbit keyframes keep transform behavior predictable across components. */
+@keyframes tlOrbitSpin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+@keyframes tlOrbitSpinReverse{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(-360deg)}
+}
+@keyframes tlProjectOrbitNode{
+  from{transform:rotate(0deg) translateX(66px) rotate(0deg)}
+  to{transform:rotate(360deg) translateX(66px) rotate(-360deg)}
+}
+@keyframes tlGenericOrbitNode{
+  from{transform:rotate(0deg) translateX(var(--tl-orbit-radius)) rotate(0deg)}
+  to{transform:rotate(360deg) translateX(var(--tl-orbit-radius)) rotate(-360deg)}
+}
+@keyframes tlGenericOrbitNodeReverse{
+  from{transform:rotate(0deg) translateX(var(--tl-orbit-radius)) rotate(0deg)}
+  to{transform:rotate(-360deg) translateX(var(--tl-orbit-radius)) rotate(360deg)}
+}
+
+@media(max-width:1120px){
+  .tl-footer__grid{
+    grid-template-columns:minmax(260px,1.25fr) minmax(120px,.5fr) minmax(120px,.5fr);
+  }
+  .tl-footer__signal{
+    grid-column:1/-1;
+    grid-template-columns:105px minmax(0,1fr);
+    max-width:620px;
+    min-height:138px;
+    margin-top:4px;
+  }
+  .tl-footer-orbit{width:100px;height:100px}
+  .tl-footer-orbit__node--1{--tl-orbit-radius:48px}
+  .tl-footer-orbit__node--2{--tl-orbit-radius:34px}
+}
+@media(max-width:700px){
+  .tl-footer__grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:34px 24px;
+  }
+  .tl-footer__identity,
+  .tl-footer__signal{
+    grid-column:1/-1;
+  }
+  .tl-footer__signal{
+    max-width:none;
+  }
+  .tl-footer__bottom{
+    grid-template-columns:1fr;
+    gap:8px;
+    margin-top:38px;
+  }
+  .tl-footer__bottom span:nth-child(2),
+  .tl-footer__bottom span:last-child{text-align:left}
+}
+@media(max-width:480px){
+  .tl-footer__grid{grid-template-columns:1fr}
+  .tl-footer__identity,
+  .tl-footer__signal{grid-column:auto}
+  .tl-footer__signal{
+    grid-template-columns:86px minmax(0,1fr);
+    gap:15px;
+    padding:16px!important;
+  }
+  .tl-footer-orbit{width:82px;height:82px}
+  .tl-footer-orbit__node--1{--tl-orbit-radius:39px}
+  .tl-footer-orbit__node--2{--tl-orbit-radius:27px}
+  .tl-footer-orbit__core{width:36px;height:36px}
+}
+
+/* Motion accessibility: every new orbit stops when the OS requests reduced motion. */
+@media(prefers-reduced-motion:reduce){
+  .tl-page-hero:after,
+  .tl-project-signal>span,
+  .tl-research-detail__orbit,
+  .tl-research-detail__orbit:before,
+  .tl-research-detail__orbit:after,
+  .tl-gallery-empty__signal,
+  .tl-gallery-empty__signal:before,
+  .tl-gallery-empty__signal:after,
+  .tl-gallery-empty__signal i,
+  .tl-join__rings span,
+  .tl-footer-orbit__ring,
+  .tl-footer-orbit__node{
+    animation:none!important;
+  }
+}
