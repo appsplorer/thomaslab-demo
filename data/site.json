@@ -25,37 +25,101 @@
       "number": "01",
       "title": "Pharmacogenomics",
       "icon": "fa-solid fa-dna",
-      "description": "Understanding how genetic variation shapes medication response and translating that evidence into better treatment decisions."
+      "description": "Understanding how genetic variation shapes medication response and translating that evidence into better treatment decisions.",
+      "long_description": "We study how genetic variation can inform medication choice and dosing, with an emphasis on evidence that can move from association to clinically useful treatment decisions.",
+      "methods": [
+        "Genotype-informed therapeutics",
+        "Pharmacogenetic evidence synthesis",
+        "Comparative effectiveness",
+        "Clinical implementation"
+      ],
+      "project_slugs": [
+        "precision-antiplatelet-therapy"
+      ]
     },
     {
       "number": "02",
       "title": "Clinical NLP",
       "icon": "fa-solid fa-file-waveform",
-      "description": "Extracting actionable phenotypes and adverse events from unstructured clinical narratives with reproducible NLP methods."
+      "description": "Extracting actionable phenotypes and adverse events from unstructured clinical narratives with reproducible NLP methods.",
+      "long_description": "Clinical narratives contain medication effects, symptoms, and outcomes that are often absent from structured fields. We develop reproducible NLP methods that turn those narratives into traceable, analyzable clinical evidence.",
+      "methods": [
+        "Clinical text phenotyping",
+        "Information extraction",
+        "Validation and error analysis",
+        "Reproducible NLP pipelines"
+      ],
+      "project_slugs": [
+        "clinical-nlp-adverse-event-phenotyping",
+        "hybrid-real-world-evidence"
+      ]
     },
     {
       "number": "03",
       "title": "Healthcare AI",
       "icon": "fa-solid fa-brain",
-      "description": "Building transparent machine-learning systems for clinical risk stratification, outcome prediction, and decision support."
+      "description": "Building transparent machine-learning systems for clinical risk stratification, outcome prediction, and decision support.",
+      "long_description": "We develop transparent computational models for clinically grounded prediction and decision support, prioritizing validation, interpretability, uncertainty, and usefulness over model complexity alone.",
+      "methods": [
+        "Machine learning",
+        "Transparent model evaluation",
+        "Explainability and error analysis",
+        "Clinical decision-support research"
+      ],
+      "project_slugs": [
+        "clinical-nlp-adverse-event-phenotyping",
+        "hybrid-real-world-evidence"
+      ]
     },
     {
       "number": "04",
       "title": "Real-World Evidence",
       "icon": "fa-solid fa-chart-line",
-      "description": "Integrating EHR, claims, structured, and unstructured data to evaluate treatment effectiveness and safety in practice."
+      "description": "Integrating EHR, claims, structured, and unstructured data to evaluate treatment effectiveness and safety in practice.",
+      "long_description": "We combine structured clinical data, claims, narrative text, and patient context to evaluate how therapies perform in routine care and to identify where evidence may or may not transport across settings.",
+      "methods": [
+        "EHR and claims analysis",
+        "Comparative effectiveness",
+        "Clinical NLP integration",
+        "Bias and uncertainty assessment"
+      ],
+      "project_slugs": [
+        "hybrid-real-world-evidence",
+        "precision-antiplatelet-therapy"
+      ]
     },
     {
       "number": "05",
       "title": "Cardiovascular Precision Medicine",
       "icon": "fa-solid fa-heart-pulse",
-      "description": "Personalizing antiplatelet therapy and cardiovascular pharmacotherapy using clinical, genetic, and real-world signals."
+      "description": "Personalizing antiplatelet therapy and cardiovascular pharmacotherapy using clinical, genetic, and real-world signals.",
+      "long_description": "Cardiovascular pharmacotherapy provides a clinically important setting for precision therapeutics. We study how genetic and clinical factors can inform antiplatelet treatment selection and cardiovascular outcomes.",
+      "methods": [
+        "Cardiovascular outcomes research",
+        "P2Y12 pharmacotherapy",
+        "Risk stratification",
+        "Genotype-guided treatment"
+      ],
+      "project_slugs": [
+        "precision-antiplatelet-therapy"
+      ]
     },
     {
       "number": "06",
       "title": "Medication Safety",
       "icon": "fa-solid fa-shield-heart",
-      "description": "Detecting adverse drug outcomes and balancing efficacy against safety at the individual-patient level."
+      "description": "Detecting adverse drug outcomes and balancing efficacy against safety at the individual-patient level.",
+      "long_description": "We investigate adverse medication outcomes and treatment trade-offs using clinical data, pharmacogenomics, and computational phenotyping, with the goal of supporting safer individualized therapy.",
+      "methods": [
+        "Adverse-event phenotyping",
+        "Medication safety surveillance",
+        "Clinical NLP",
+        "Outcome and risk analysis"
+      ],
+      "project_slugs": [
+        "clinical-nlp-adverse-event-phenotyping",
+        "hybrid-real-world-evidence"
+      ]
     }
   ],
   "socials": [
