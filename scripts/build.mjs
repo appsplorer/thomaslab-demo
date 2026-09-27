@@ -295,12 +295,13 @@ const sitemap='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www
 fs.writeFileSync(path.join(OUT,"sitemap.xml"),sitemap);
 fs.writeFileSync(path.join(OUT,"robots.txt"),'User-agent: *\nAllow: /\nSitemap: '+absolute("/sitemap.xml")+'\n');
 ensure(path.join(OUT,".well-known"));
+const securityExpires=new Date(Date.now()+365*24*60*60*1000).toISOString();
 fs.writeFileSync(path.join(OUT,".well-known/security.txt"),[
   "Contact: mailto:"+site.email,
   "Canonical: "+absolute("/.well-known/security.txt"),
   "Policy: "+absolute("/SECURITY.md"),
   "Preferred-Languages: en",
-  "Expires: 2027-09-27T23:59:59.000Z",
+  "Expires: "+securityExpires,
   ""
 ].join("\n"));
 fs.copyFileSync(path.join(ROOT,"SECURITY.md"),path.join(OUT,"SECURITY.md"));
