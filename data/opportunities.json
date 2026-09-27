@@ -24,7 +24,14 @@
     ],
     "contact_email": "CDThomas@uga.edu",
     "external_apply_url": "",
-    "featured": true
+    "featured": true,
+    "funding": "Subject to graduate-program and project funding availability; confirm before applying.",
+    "start_date": "Varies by admission cycle",
+    "eligibility": [
+      "Applicants must satisfy the requirements of the relevant University of Georgia graduate program.",
+      "International applicants should review program-specific English-language and immigration requirements.",
+      "Funding, admission, and supervision availability must be confirmed separately."
+    ]
   },
   {
     "slug": "research-assistant-student-research",
@@ -51,7 +58,13 @@
     ],
     "contact_email": "CDThomas@uga.edu",
     "external_apply_url": "",
-    "featured": true
+    "featured": true,
+    "funding": "Varies by project; some opportunities may be paid, for credit, or volunteer-based.",
+    "start_date": "Project dependent",
+    "eligibility": [
+      "Enrollment, work authorization, course-credit rules, and appointment eligibility depend on the specific opportunity.",
+      "The lab will state the arrangement clearly before any commitment is made."
+    ]
   },
   {
     "slug": "research-collaborations",
@@ -76,6 +89,11 @@
     ],
     "contact_email": "CDThomas@uga.edu",
     "external_apply_url": "",
-    "featured": false
+    "featured": false,
+    "funding": "Project dependent; collaborative funding arrangements are discussed case by case.",
+    "start_date": "Project dependent",
+    "eligibility": [
+      "A collaboration should have a clear scientific question, complementary expertise or data, and an agreed scope of work."
+    ]
   }
 ]
