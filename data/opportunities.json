@@ -1,0 +1,81 @@
+[
+  {
+    "slug": "prospective-phd-students",
+    "title": "Prospective PhD Students",
+    "type": "PhD",
+    "status": "Expressions of interest",
+    "location": "Athens, Georgia",
+    "commitment": "Graduate research",
+    "posted_date": "2026-09-27",
+    "deadline": "Ongoing / subject to program and funding availability",
+    "summary": "Prospective doctoral students interested in precision medicine, pharmacogenomics, clinical informatics, real-world evidence, or healthcare AI may contact the lab to discuss research fit and current availability.",
+    "body_html": "<p>Thomas Lab welcomes inquiries from prospective doctoral students whose interests align with the lab’s research program. Admission, funding, and start dates depend on the relevant graduate program and available support, so an inquiry is not a guarantee of an open funded position.</p><p>Strong candidates will be interested in rigorous clinical research questions and in developing reproducible computational or quantitative methods that can translate to patient care.</p>",
+    "qualifications": [
+      "Interest in pharmacogenomics, precision medicine, clinical NLP, real-world evidence, health outcomes, or trustworthy healthcare AI",
+      "Strong quantitative, computational, clinical, or pharmacy background appropriate to the proposed work",
+      "Ability to communicate clearly and work collaboratively across disciplines",
+      "Commitment to reproducible and responsible research"
+    ],
+    "how_to_apply": [
+      "Send a concise email describing your research interests and why they align with the lab",
+      "Attach a current CV or résumé",
+      "Include relevant academic background and research experience",
+      "When applicable, identify the UGA graduate program and intended admission cycle"
+    ],
+    "contact_email": "CDThomas@uga.edu",
+    "external_apply_url": "",
+    "featured": true
+  },
+  {
+    "slug": "research-assistant-student-research",
+    "title": "Research Assistants & Student Researchers",
+    "type": "Research Assistant / Student Research",
+    "status": "Expressions of interest",
+    "location": "Athens, Georgia / project dependent",
+    "commitment": "Project dependent",
+    "posted_date": "2026-09-27",
+    "deadline": "Ongoing / subject to project availability",
+    "summary": "Students interested in contributing to data-driven medication research can inquire about current research-assistant, independent-study, or project-based opportunities.",
+    "body_html": "<p>Research needs vary over time. Depending on current projects, students may contribute to literature review, data curation, clinical NLP, reproducible analysis, software tooling, visualization, or manuscript preparation.</p><p>The most useful inquiry briefly explains the skills you can contribute, the skills you hope to develop, and the amount of time you can realistically commit.</p>",
+    "qualifications": [
+      "Interest in clinical or translational research",
+      "Reliable communication and attention to research quality",
+      "Relevant experience in data analysis, programming, pharmacy, clinical research, statistics, or scientific writing is helpful",
+      "Willingness to learn reproducible research workflows"
+    ],
+    "how_to_apply": [
+      "Email the lab with a short statement of interest",
+      "Attach a CV or résumé",
+      "List relevant coursework, technical skills, and prior research experience",
+      "State your expected availability and timeframe"
+    ],
+    "contact_email": "CDThomas@uga.edu",
+    "external_apply_url": "",
+    "featured": true
+  },
+  {
+    "slug": "research-collaborations",
+    "title": "Research Collaborations",
+    "type": "Collaboration",
+    "status": "Open to aligned inquiries",
+    "location": "Collaborative / multi-site",
+    "commitment": "Project dependent",
+    "posted_date": "2026-09-27",
+    "deadline": "Ongoing",
+    "summary": "Clinicians, data scientists, pharmacists, informaticians, and research groups with complementary expertise can contact the lab about aligned collaborative questions.",
+    "body_html": "<p>Collaborative inquiries are most useful when they begin with a well-defined clinical or translational question, a clear description of the available data or expertise, and a realistic view of the contribution expected from each team.</p><p>The lab is particularly interested in collaborations involving pharmacogenomics, cardiovascular pharmacotherapy, medication safety, clinical NLP, real-world evidence, and precision therapeutics.</p>",
+    "qualifications": [
+      "A clearly defined research question or complementary capability",
+      "Alignment with the lab’s scientific scope",
+      "Commitment to transparent, reproducible, and responsible research"
+    ],
+    "how_to_apply": [
+      "Email a brief project summary",
+      "Describe the proposed roles and available data or resources",
+      "Include relevant timelines and expected outputs"
+    ],
+    "contact_email": "CDThomas@uga.edu",
+    "external_apply_url": "",
+    "featured": false
+  }
+]

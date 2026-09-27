@@ -1,0 +1,105 @@
+[
+  {
+    "slug": "clinical-nlp-adverse-event-phenotyping",
+    "title": "Clinical NLP for Adverse Event Phenotyping",
+    "subtitle": "Unstructured EHR → computable phenotype",
+    "status": "Active research program",
+    "icon": "fa-solid fa-file-waveform",
+    "image": "",
+    "short_description": "Developing reproducible NLP pipelines that transform clinical narratives into structured evidence for medication safety and outcomes research.",
+    "summary": "Clinical notes contain medication effects, symptoms, treatment changes, and adverse events that are often absent from structured fields. This research program develops transparent methods for converting those narratives into clinically useful phenotypes.",
+    "body_html": "<p>Clinical narratives capture important context that conventional structured variables can miss. This research program focuses on extracting clinically meaningful medication and outcome concepts from electronic health record text while preserving traceability back to the underlying evidence.</p><p>The long-term objective is to connect robust clinical NLP with pharmacoepidemiology, safety surveillance, and precision therapeutics rather than treating text extraction as an isolated prediction task.</p>",
+    "goals": [
+      "Create reproducible phenotype definitions from narrative clinical data",
+      "Evaluate transportability across populations and documentation settings",
+      "Connect extracted concepts to medication safety and outcomes questions"
+    ],
+    "methods": [
+      "Clinical natural language processing",
+      "Phenotype validation",
+      "Machine learning and representation learning",
+      "Error analysis and explainability",
+      "Real-world clinical data analysis"
+    ],
+    "topics": [
+      "Clinical NLP",
+      "EHR",
+      "Medication Safety",
+      "Healthcare AI"
+    ],
+    "links": [],
+    "related_publications": [],
+    "featured": true
+  },
+  {
+    "slug": "precision-antiplatelet-therapy",
+    "title": "Precision Antiplatelet Therapy",
+    "subtitle": "Genotype + phenotype + outcomes",
+    "status": "Active research program",
+    "icon": "fa-solid fa-dna",
+    "image": "",
+    "short_description": "Studying how genetic, clinical, and real-world evidence can improve antiplatelet therapy selection after coronary intervention.",
+    "summary": "This program examines how pharmacogenomics and clinical risk factors can inform antiplatelet treatment decisions, with a particular focus on CYP2C19, clopidogrel response, cardiovascular outcomes, and implementation.",
+    "body_html": "<p>Antiplatelet therapy is a clinically important setting for precision medicine because treatment response can vary according to genetic and non-genetic factors. The lab studies how genotype-informed evidence can be integrated with patient characteristics and real-world outcomes.</p><p>The program spans pharmacogenomics, implementation, comparative effectiveness, and cardiovascular pharmacotherapy, with an emphasis on evidence that can support practical treatment decisions.</p>",
+    "goals": [
+      "Characterize treatment-response heterogeneity",
+      "Evaluate genotype-guided treatment strategies in real-world settings",
+      "Identify clinically useful combinations of genetic and non-genetic risk information"
+    ],
+    "methods": [
+      "Pharmacogenomics",
+      "Comparative effectiveness research",
+      "Cardiovascular outcomes analysis",
+      "Clinical implementation science",
+      "Risk stratification"
+    ],
+    "topics": [
+      "Pharmacogenomics",
+      "Cardiovascular",
+      "Precision Medicine",
+      "P2Y12 Inhibitors"
+    ],
+    "links": [],
+    "related_publications": [
+      "cyp2c19-maintenance-clopidogrel-2025",
+      "abcd-gene-clopidogrel-effectiveness-2024",
+      "cyp2c19-guided-antiplatelet-2022"
+    ],
+    "featured": true
+  },
+  {
+    "slug": "hybrid-real-world-evidence",
+    "title": "Hybrid Real-World Evidence",
+    "subtitle": "Structured data + clinical text + patient context",
+    "status": "Active research program",
+    "icon": "fa-solid fa-chart-line",
+    "image": "",
+    "short_description": "Integrating structured and unstructured clinical data to study treatment effectiveness, safety, and disparities in routine care.",
+    "summary": "Real-world clinical questions rarely fit neatly inside one data modality. This program develops analytic strategies that combine structured EHR or claims variables with clinical text and contextual information.",
+    "body_html": "<p>Real-world evidence is most useful when the data-generating process, clinical context, and limitations of each source are made explicit. The lab studies how structured and unstructured evidence can be combined without obscuring uncertainty or introducing avoidable bias.</p><p>Applications include cardiovascular outcomes, medication safety, treatment effectiveness, and questions involving social or contextual determinants of health.</p>",
+    "goals": [
+      "Integrate heterogeneous real-world data sources",
+      "Quantify uncertainty and data limitations",
+      "Produce clinically interpretable evidence for medication decisions"
+    ],
+    "methods": [
+      "Real-world evidence",
+      "EHR and claims analysis",
+      "Clinical NLP",
+      "Causal and comparative effectiveness methods",
+      "Transparent machine learning"
+    ],
+    "topics": [
+      "Real-World Evidence",
+      "Healthcare AI",
+      "Medication Safety",
+      "Clinical Data"
+    ],
+    "links": [],
+    "related_publications": [
+      "socioeconomic-deprivation-post-pci-2026",
+      "abcd-gene-clopidogrel-effectiveness-2024"
+    ],
+    "featured": true
+  }
+]
