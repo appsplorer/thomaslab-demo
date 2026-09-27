@@ -1,0 +1,69 @@
+[
+  {
+    "slug": "cameron-d-thomas",
+    "name": "Cameron D. Thomas",
+    "credentials": "PharmD, PhD",
+    "role": "principal-investigator",
+    "role_label": "Principal Investigator",
+    "position": "Assistant Professor",
+    "affiliation": "Department of Clinical & Administrative Pharmacy · University of Georgia College of Pharmacy",
+    "photo": "",
+    "email": "CDThomas@uga.edu",
+    "phone": "+1 706-542-7412",
+    "office": "R.C. Wilson, Room 270E",
+    "research_topics": [
+      "Pharmacogenomics",
+      "Precision Medicine",
+      "Clinical NLP",
+      "Healthcare AI",
+      "Cardiovascular Pharmacotherapy",
+      "Medication Safety",
+      "Real-World Evidence"
+    ],
+    "short_bio": "Dr. Thomas is a clinician-scientist developing data-driven approaches to individualize medication therapy and improve patient safety.",
+    "bio_html": "<p>Dr. Cameron D. Thomas develops precision-medicine approaches that integrate pharmacogenomics, clinical data, and computational methods to improve medication selection, safety, and patient outcomes.</p><p>His research program connects cardiovascular pharmacotherapy and real-world evidence with artificial intelligence and natural language processing, with an emphasis on clinically meaningful translation.</p>",
+    "education": [
+      {
+        "label": "PhD",
+        "detail": "University of Florida"
+      },
+      {
+        "label": "T32 PARADIGM Fellowship",
+        "detail": "University of Florida · NHGRI-sponsored training"
+      },
+      {
+        "label": "PGY2 Clinical Pharmacogenetics",
+        "detail": "St. Jude Children’s Research Hospital"
+      },
+      {
+        "label": "PGY1 Pharmacy Residency",
+        "detail": "UF Health Jacksonville"
+      },
+      {
+        "label": "PharmD",
+        "detail": "University of Florida"
+      }
+    ],
+    "links": [
+      {
+        "label": "UGA faculty profile",
+        "url": "https://rx.uga.edu/faculty-member/cameron-thomas-pharm-d-ph-d/",
+        "icon": "fa-solid fa-building-columns"
+      },
+      {
+        "label": "ORCID",
+        "url": "https://orcid.org/0000-0001-5040-2313",
+        "icon": "fa-brands fa-orcid"
+      },
+      {
+        "label": "Email",
+        "url": "mailto:CDThomas@uga.edu",
+        "icon": "fa-regular fa-envelope"
+      }
+    ],
+    "start_year": 2025,
+    "end_year": null,
+    "next_position": "",
+    "featured": true
+  }
+]
