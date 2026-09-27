@@ -206,7 +206,7 @@ document.addEventListener("click",(event)=>{
     button.addEventListener('click', async () => {
       const text = button.dataset.copyText || '';
       if (!text) return;
-      const original = button.innerHTML;
+      const originalNodes = [...button.childNodes].map((node) => node.cloneNode(true));
       let copied = false;
       try {
         await navigator.clipboard.writeText(text);
@@ -223,8 +223,12 @@ document.addEventListener("click",(event)=>{
         textarea.remove();
       }
       if (copied) {
-        button.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
-        window.setTimeout(() => { button.innerHTML = original; }, 1600);
+        const icon = document.createElement('i');
+        icon.className = 'fa-solid fa-check';
+        button.replaceChildren(icon, document.createTextNode(' Copied'));
+        window.setTimeout(() => {
+          button.replaceChildren(...originalNodes.map((node) => node.cloneNode(true)));
+        }, 1600);
       }
     });
   });
