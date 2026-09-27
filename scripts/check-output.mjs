@@ -41,6 +41,8 @@ for(const file of htmlFiles){
     if(html.includes(marker)) fail(path.relative(OUT,file)+" still contains placeholder text: "+marker);
   }
   if(/javascript\s*:/i.test(html)) fail(path.relative(OUT,file)+" contains javascript: URL");
+  const mainCount=(html.match(/<main\b/gi)||[]).length;
+  if(mainCount!==1) fail(path.relative(OUT,file)+" must contain exactly one main landmark, found "+mainCount);
   if(/<a\b[^>]*href=["']\s*(?:#)?\s*["']/i.test(html)) fail(path.relative(OUT,file)+" contains an empty link");
   const ids=[...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(m=>m[1]);
   const seenIds=new Set();
