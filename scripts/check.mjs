@@ -115,7 +115,7 @@ for(const [i,social] of (site.socials||[]).entries()){
   checkIcon(social.icon,"site.socials["+i+"].icon");
 }
 
-for(const required of [".pages.yml","SECURITY.md","assets/css/site.css","assets/js/site.js","assets/favicon.svg","scripts/build.mjs","scripts/check-output.mjs"]){
+for(const required of [".pages.yml","SECURITY.md","assets/css/site.css","assets/js/site.js","assets/favicon.svg","assets/vendor/fontawesome/css/all.min.css","assets/vendor/fontawesome/webfonts/fa-brands-400.woff2","assets/vendor/fontawesome/webfonts/fa-regular-400.woff2","assets/vendor/fontawesome/webfonts/fa-solid-900.woff2","assets/vendor/fontawesome/webfonts/fa-v4compatibility.woff2","scripts/build.mjs","scripts/check-output.mjs"]){
   if(!fs.existsSync(path.join(ROOT,required))) fail("Missing required source file: "+required);
 }
 
