@@ -66,6 +66,9 @@ for(const [i,area] of (site.research_areas||[]).entries()){
   const key=area.title.trim().toLowerCase();
   if(researchTitles.has(key)) fail("Duplicate research area: "+area.title);
   researchTitles.add(key);
+  for(const slug of area.project_slugs||[]){
+    if(!slugSets.projects.has(slug)) fail("site.research_areas["+i+"].project_slugs references missing project: "+slug);
+  }
 }
 for(const [i,social] of (site.socials||[]).entries()){
   if(!social.label || !social.url || !safeUrl(social.url)) fail("site.socials["+i+"] needs a safe label and URL");
