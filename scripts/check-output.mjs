@@ -14,6 +14,7 @@ function walk(dir){
 walk(OUT);
 const htmlFiles=files.filter(f=>f.endsWith(".html"));
 if(htmlFiles.length<20) fail("Unexpectedly small generated site: "+htmlFiles.length+" HTML files");
+if(files.some(f=>f.endsWith(".map"))) fail("Production output must not include source-map files");
 
 const datasets=["publications","people","news","projects","opportunities"];
 for(const name of datasets){
@@ -45,6 +46,25 @@ for(const file of htmlFiles){
     if(html.includes(marker)) fail(path.relative(OUT,file)+" still contains placeholder text: "+marker);
   }
   if(/javascript\s*:/i.test(html)) fail(path.relative(OUT,file)+" contains javascript: URL");
+  if(/<a\b[^>]*href=["']\s*data:/i.test(html)) fail(path.relative(OUT,file)+" contains a data: navigation URL");
+  if(/\son[a-z]+\s*=/i.test(html)) fail(path.relative(OUT,file)+" contains an inline event handler");
+  if(/\ssrcdoc\s*=/i.test(html)) fail(path.relative(OUT,file)+" contains srcdoc");
+  if(/\sstyle\s*=/i.test(html)) fail(path.relative(OUT,file)+" contains an inline style attribute");
+  if(/<style\b/i.test(html)) fail(path.relative(OUT,file)+" contains an inline style block");
+  if(/\b(?:href|src)=["']http:\/\//i.test(html)) fail(path.relative(OUT,file)+" contains an insecure http:// asset or link");
+  const csp=[...html.matchAll(/<meta\b[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>/gi)];
+  if(csp.length!==1) fail(path.relative(OUT,file)+" must contain exactly one Content-Security-Policy meta tag");
+  if(/'unsafe-inline'|'unsafe-eval'/i.test(csp[0][0])) fail(path.relative(OUT,file)+" has an unsafe CSP allowance");
+  for(const directive of ["default-src 'self'","base-uri 'none'","object-src 'none'","script-src-attr 'none'","frame-src 'none'","worker-src 'none'","form-action 'none'","require-trusted-types-for 'script'"]){
+    if(!csp[0][0].includes(directive)) fail(path.relative(OUT,file)+" CSP is missing: "+directive);
+  }
+  if(!/<meta\b[^>]*name=["']referrer["'][^>]*content=["']strict-origin-when-cross-origin["']/i.test(html)) fail(path.relative(OUT,file)+" is missing the referrer policy meta tag");
+  const faLink=html.match(/<link\b[^>]*href=["']https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.7\.2\/css\/all\.min\.css["'][^>]*>/i)?.[0]||"";
+  if(!faLink || !/integrity=["']sha512-[^"']+["']/i.test(faLink) || !/crossorigin=["']anonymous["']/i.test(faLink)) fail(path.relative(OUT,file)+" Font Awesome stylesheet is missing SRI/crossorigin");
+  const localCss=html.match(/<link\b[^>]*href=["'][^"']*\/assets\/css\/site\.css["'][^>]*>/i)?.[0]||"";
+  if(!localCss || !/integrity=["']sha384-[^"']+["']/i.test(localCss)) fail(path.relative(OUT,file)+" local stylesheet is missing SRI");
+  const localJs=html.match(/<script\b[^>]*src=["'][^"']*\/assets\/js\/site\.js["'][^>]*>/i)?.[0]||"";
+  if(!localJs || !/integrity=["']sha384-[^"']+["']/i.test(localJs)) fail(path.relative(OUT,file)+" local JavaScript is missing SRI");
   const mainCount=(html.match(/<main\b/gi)||[]).length;
   const mainCloseCount=(html.match(/<\/main>/gi)||[]).length;
   if(mainCount!==1) fail(path.relative(OUT,file)+" must contain exactly one main landmark, found "+mainCount);
@@ -95,7 +115,19 @@ for(const file of htmlFiles){
     if(!/\balt=["'][^"']*["']/i.test(tag[0])) fail(path.relative(OUT,file)+" has image without alt attribute");
   }
 }
-for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg"]){
+for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg","SECURITY.md",".well-known/security.txt"]){
   if(!fs.existsSync(path.join(OUT,required))) fail("Missing generated asset: "+required);
 }
-console.log("Output validation passed:",htmlFiles.length,"HTML pages and",files.length,"total files.");
+const js=fs.readFileSync(path.join(OUT,"assets/js/site.js"),"utf8");
+for(const sink of ["innerHTML","outerHTML","insertAdjacentHTML","eval(","new Function","document.write"]){
+  if(js.includes(sink)) fail("Production JavaScript contains disallowed DOM/code sink: "+sink);
+}
+if(/sourceMappingURL/i.test(js)) fail("Production JavaScript references a source map");
+const css=fs.readFileSync(path.join(OUT,"assets/css/site.css"),"utf8");
+if(/@import\s/i.test(css)) fail("Production CSS contains @import; vendor resources must be explicit and CSP-controlled");
+if(/sourceMappingURL/i.test(css)) fail("Production CSS references a source map");
+const securityTxt=fs.readFileSync(path.join(OUT,".well-known/security.txt"),"utf8");
+for(const field of ["Contact: mailto:","Canonical: https://","Expires: "]){
+  if(!securityTxt.includes(field)) fail("security.txt is missing "+field);
+}
+console.log("Output validation passed:",htmlFiles.length,"HTML pages and",files.length,"total files, with CSP/SRI/security checks.");
