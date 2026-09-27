@@ -34,6 +34,7 @@ for(const name of datasetNames){
     for(const key of ["body_html","bio_html"]){
       if(row[key] && danger.test(row[key])) fail(name+"["+i+"]."+key+" contains unsafe HTML");
     }
+    if(name==="publications" && !row.external_url && !row.pubmed && !row.doi) fail("publications["+i+"] needs an official external_url, PubMed URL, or DOI");
     if(row.pdf && !/^\/media\/pdfs\//.test(row.pdf)) fail(name+"["+i+"].pdf must use /media/pdfs/");
     if(row.cv && !/^\/media\/pdfs\//.test(row.cv)) fail(name+"["+i+"].cv must use /media/pdfs/");
     if(row.image && !/^\/media\/images\//.test(row.image)) fail(name+"["+i+"].image must use /media/images/");
