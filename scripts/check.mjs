@@ -4,8 +4,28 @@ import path from "node:path";
 const ROOT=process.cwd();
 const datasetNames=["publications","people","news","projects","opportunities"];
 const fail=(m)=>{throw new Error(m)};
-const safeUrl=(u)=>!u || /^(https:\/\/|mailto:|tel:)/i.test(String(u));
-const danger=/<\s*(script|iframe|object|embed|form|style)\b|\son[a-z]+\s*=|javascript\s*:/i;
+const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const iconRe=/^fa-(?:solid|regular|brands)\s+fa-[a-z0-9-]+$/;
+const doiRe=/^10\.\d{4,9}\/[A-Z0-9._;()/:+-]+$/i;
+const danger=/<\s*(script|iframe|object|embed|form|style|svg|math|template|base|meta|link)\b|\s(?:on[a-z]+|style|srcdoc|formaction)\s*=|(?:javascript|vbscript|data)\s*:/i;
+
+function httpsUrl(value){
+  try{
+    const u=new URL(String(value));
+    return u.protocol==="https:" && !u.username && !u.password;
+  }catch{return false}
+}
+function localPath(value,prefix){
+  const v=String(value||"");
+  return v.startsWith(prefix) && !v.includes("..") && !v.includes("\\") && !/[?#]/.test(v);
+}
+function mediaPath(value,prefix,exts){
+  if(!localPath(value,prefix)) return false;
+  return exts.some(ext=>String(value).toLowerCase().endsWith(ext));
+}
+function checkIcon(value,label){
+  if(value && !iconRe.test(String(value))) fail(label+" has an invalid icon class");
+}
 
 const datasets={};
 for(const name of datasetNames){
@@ -19,26 +39,34 @@ for(const name of datasetNames){
   const rows=datasets[name];
   const seen=new Set();
   for(const [i,row] of rows.entries()){
-    if(!row.slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(row.slug)) fail(name+"["+i+"] has an invalid slug");
+    const label=name+"["+i+"]";
+    if(!row.slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(row.slug)) fail(label+" has an invalid slug");
     if(seen.has(row.slug)) fail(name+" contains duplicate slug: "+row.slug);
     seen.add(row.slug);
-    if(!row.title && !row.name) fail(name+"["+i+"] needs a title or name");
+    if(!row.title && !row.name) fail(label+" needs a title or name");
 
     for(const key of ["external_url","external_apply_url","pubmed","linkedin","google_scholar","orcid","github","website"]){
       const value=row[key];
-      if(value && !safeUrl(value)) fail(name+"["+i+"]."+key+" is not an allowed URL");
+      if(value && !httpsUrl(value)) fail(label+"."+key+" must be an HTTPS URL without embedded credentials");
     }
-    for(const link of row.links||[]){
-      if(link.url && !safeUrl(link.url)) fail(name+"["+i+"].links contains a disallowed URL");
+    for(const [j,link] of (row.links||[]).entries()){
+      if(link.url && !httpsUrl(link.url)) fail(label+".links["+j+"] must be an HTTPS URL without embedded credentials");
+      checkIcon(link.icon,label+".links["+j+"].icon");
     }
     for(const key of ["body_html","bio_html"]){
-      if(row[key] && danger.test(row[key])) fail(name+"["+i+"]."+key+" contains unsafe HTML");
+      if(row[key] && danger.test(row[key])) fail(label+"."+key+" contains unsafe HTML");
     }
-    if(name==="publications" && !row.external_url && !row.pubmed && !row.doi) fail("publications["+i+"] needs an official external_url, PubMed URL, or DOI");
-    if(row.pdf && !/^\/media\/pdfs\//.test(row.pdf)) fail(name+"["+i+"].pdf must use /media/pdfs/");
-    if(row.cv && !/^\/media\/pdfs\//.test(row.cv)) fail(name+"["+i+"].cv must use /media/pdfs/");
-    if(row.image && !/^\/media\/images\//.test(row.image)) fail(name+"["+i+"].image must use /media/images/");
-    if(row.photo && !/^\/media\/images\//.test(row.photo)) fail(name+"["+i+"].photo must use /media/images/");
+    if(row.email && !emailRe.test(String(row.email))) fail(label+".email is not a valid email address");
+    if(row.contact_email && !emailRe.test(String(row.contact_email))) fail(label+".contact_email is not a valid email address");
+    if(row.doi && !doiRe.test(String(row.doi))) fail(label+".doi is not a valid DOI");
+    if(name==="publications" && !row.external_url && !row.pubmed && !row.doi) fail(label+" needs an official external_url, PubMed URL, or DOI");
+
+    if(row.pdf && !mediaPath(row.pdf,"/media/pdfs/",[".pdf"])) fail(label+".pdf must be a safe /media/pdfs/*.pdf path");
+    if(row.cv && !mediaPath(row.cv,"/media/pdfs/",[".pdf"])) fail(label+".cv must be a safe /media/pdfs/*.pdf path");
+    if(row.image && !mediaPath(row.image,"/media/images/",[".jpg",".jpeg",".png",".webp",".gif",".avif",".svg"])) fail(label+".image must be a safe /media/images/ image path");
+    if(row.photo && !mediaPath(row.photo,"/media/images/",[".jpg",".jpeg",".png",".webp",".gif",".avif"])) fail(label+".photo must be a safe raster /media/images/ path");
+
+    checkIcon(row.icon,label+".icon");
   }
   slugSets[name]=seen;
 }
@@ -59,24 +87,58 @@ for(const [i,project] of datasets.projects.entries()){
 
 const site=JSON.parse(fs.readFileSync(path.join(ROOT,"data/site.json"),"utf8"));
 if(!site.name || !site.email || !site.site_url) fail("site.json needs name, email and site_url");
-if(!/^https:\/\//i.test(site.site_url)) fail("site.site_url must use https://");
-if(!site.hero?.primary_href?.startsWith("/") || !site.hero?.secondary_href?.startsWith("/")) fail("Hero links must be site-relative paths beginning with /");
+if(!emailRe.test(String(site.email))) fail("site.email is not a valid email address");
+if(!httpsUrl(site.site_url)) fail("site.site_url must be an HTTPS URL without embedded credentials");
+for(const key of ["primary_href","secondary_href"]){
+  const value=site.hero?.[key];
+  if(!value || !value.startsWith("/") || value.startsWith("//") || value.includes("..") || value.includes("\\")) fail("Hero "+key+" must be a safe site-relative path beginning with /");
+}
 const researchTitles=new Set();
 for(const [i,area] of (site.research_areas||[]).entries()){
   if(!area.title) fail("site.research_areas["+i+"] needs a title");
   const key=area.title.trim().toLowerCase();
   if(researchTitles.has(key)) fail("Duplicate research area: "+area.title);
   researchTitles.add(key);
+  checkIcon(area.icon,"site.research_areas["+i+"].icon");
   for(const slug of area.project_slugs||[]){
     if(!slugSets.projects.has(slug)) fail("site.research_areas["+i+"].project_slugs references missing project: "+slug);
   }
 }
 for(const [i,social] of (site.socials||[]).entries()){
-  if(!social.label || !social.url || !safeUrl(social.url)) fail("site.socials["+i+"] needs a safe label and URL");
+  if(!social.label || !social.url || !httpsUrl(social.url)) fail("site.socials["+i+"] needs a label and safe HTTPS URL");
+  checkIcon(social.icon,"site.socials["+i+"].icon");
 }
 
-for(const required of [".pages.yml","assets/css/site.css","assets/js/site.js","scripts/build.mjs","scripts/check-output.mjs"]){
+for(const required of [".pages.yml","SECURITY.md","assets/css/site.css","assets/js/site.js","assets/favicon.svg","scripts/build.mjs","scripts/check-output.mjs"]){
   if(!fs.existsSync(path.join(ROOT,required))) fail("Missing required source file: "+required);
 }
 
-console.log("Source validation passed:",datasetNames.join(", "),"+ cross-references, professional links and media paths.");
+// Prevent common credential files and high-confidence secret formats from entering production history.
+const forbiddenNames=[
+  /^\.env(?:\..+)?$/i,/^id_(?:rsa|dsa|ecdsa|ed25519)$/i,/\.(?:pem|p12|pfx|key)$/i
+];
+const secretPatterns=[
+  /github_pat_[A-Za-z0-9_]{20,}/,
+  /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/,
+  /-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/,
+  /\bAKIA[0-9A-Z]{16}\b/
+];
+const skipDirs=new Set([".git","_site","node_modules"]);
+function walk(dir){
+  for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+    if(entry.isDirectory() && skipDirs.has(entry.name)) continue;
+    const full=path.join(dir,entry.name);
+    if(entry.isDirectory()){ walk(full); continue; }
+    if(forbiddenNames.some(re=>re.test(entry.name))) fail("Forbidden credential-like file tracked: "+path.relative(ROOT,full));
+    const ext=path.extname(entry.name).toLowerCase();
+    if(![".js",".mjs",".cjs",".json",".yml",".yaml",".md",".css",".html",".txt",".xml"].includes(ext) && !entry.name.startsWith(".")) continue;
+    let text="";
+    try{text=fs.readFileSync(full,"utf8")}catch{continue}
+    for(const re of secretPatterns){
+      if(re.test(text)) fail("Potential secret detected in "+path.relative(ROOT,full));
+    }
+  }
+}
+walk(ROOT);
+
+console.log("Source validation passed:",datasetNames.join(", "),"+ URLs, HTML, cross-references, media paths, icons and secret scan.");
