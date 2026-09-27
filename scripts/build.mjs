@@ -14,9 +14,13 @@ const projects=JSON.parse(fs.readFileSync(path.join(ROOT,"data/projects.json"),"
 const opportunities=JSON.parse(fs.readFileSync(path.join(ROOT,"data/opportunities.json"),"utf8"));
 
 const esc=(s="")=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-const safeEmbeddedUrl=(value="")=>{
+const safeRichHref=(value="")=>{
   const v=String(value).trim();
   return v==="" || v.startsWith("/") || v.startsWith("#") || /^(https:\/\/|mailto:|tel:)/i.test(v);
+};
+const safeRichSrc=(value="")=>{
+  const v=String(value).trim();
+  return v==="" || /^\/media\/images\/[A-Za-z0-9._/-]+$/.test(v);
 };
 function safeRichHtml(input=""){
   return String(input||"")
@@ -26,7 +30,8 @@ function safeRichHtml(input=""){
     .replace(/\ssrcset\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi,"")
     .replace(/\s(href|src)\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/gi,(match,attr,raw,dq,sq,bare)=>{
       const value=dq??sq??bare??"";
-      return safeEmbeddedUrl(value)?` ${attr}="${value.replace(/"/g,"&quot;")}"`:` ${attr}="#"`;
+      const ok=String(attr).toLowerCase()==="src"?safeRichSrc(value):safeRichHref(value);
+      return ok?` ${attr}="${value.replace(/"/g,"&quot;")}"`:` ${attr}="#"`;
     });
 }
 const href=(p="/")=>BASE+(p.startsWith("/")?p:"/"+p);
@@ -75,7 +80,7 @@ function head({title,description,route="/",type="WebPage"}){
 <meta property="og:type" content="website"><meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="${esc(full)}"><meta name="twitter:description" content="${esc(description)}">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' 'sha256-${hash}'; script-src-attr 'none'; style-src 'self'; font-src 'self'; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; form-action 'none'; require-trusted-types-for 'script'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' 'sha256-${hash}'; script-src-attr 'none'; style-src 'self'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; form-action 'none'; require-trusted-types-for 'script'; upgrade-insecure-requests">
 <link rel="stylesheet" href="${href("/assets/vendor/fontawesome/css/all.min.css")}" integrity="${FONT_AWESOME_SRI}">
 <link rel="stylesheet" href="${href("/assets/css/site.css")}" integrity="${SITE_CSS_SRI}">
 <script type="application/ld+json">${json}</script>
@@ -285,8 +290,13 @@ fs.copyFileSync(path.join(ROOT,"assets/js/site.js"),path.join(OUT,"assets/js/sit
 fs.copyFileSync(path.join(ROOT,"assets/favicon.svg"),path.join(OUT,"assets/favicon.svg"));
 fs.cpSync(path.join(ROOT,"assets/vendor"),path.join(OUT,"assets/vendor"),{recursive:true});
 fs.writeFileSync(path.join(OUT,".nojekyll"),"");
-const mediaDir=path.join(ROOT,"media");
-if(fs.existsSync(mediaDir)) fs.cpSync(mediaDir,path.join(OUT,"media"),{recursive:true});
+for(const kind of ["images","pdfs"]){
+  const source=path.join(ROOT,"media",kind);
+  if(!fs.existsSync(source)) continue;
+  const destination=path.join(OUT,"media",kind);
+  ensure(destination);
+  fs.cpSync(source,destination,{recursive:true,filter:(sourcePath)=>path.basename(sourcePath)!==".gitkeep"});
+}
 
 const xmlEsc=(s="")=>String(s).replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));
 const today=new Date().toISOString().slice(0,10);
