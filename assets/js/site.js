@@ -236,7 +236,7 @@ document.addEventListener("click",(event)=>{
   /* ---------- homepage gallery lightbox ---------- */
   const galleryItems = [...document.querySelectorAll('[data-gallery-item]')];
   const galleryDialog = document.querySelector('[data-gallery-lightbox]');
-  if (galleryItems.length && galleryDialog instanceof HTMLDialogElement) {
+  if (galleryItems.length && typeof HTMLDialogElement !== 'undefined' && galleryDialog instanceof HTMLDialogElement) {
     const galleryImage = galleryDialog.querySelector('[data-gallery-image]');
     const galleryCaption = galleryDialog.querySelector('[data-gallery-caption]');
     const galleryMeta = galleryDialog.querySelector('[data-gallery-meta]');

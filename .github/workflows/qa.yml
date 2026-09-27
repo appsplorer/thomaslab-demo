@@ -24,6 +24,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check scripts/build.mjs
+          node --check assets/js/site.js
           node scripts/check.mjs
           node scripts/build.mjs
           node scripts/check-output.mjs

@@ -62,7 +62,7 @@ content:
       - name: gallery
         label: Homepage photo gallery
         type: object
-        description: "Homepage-only Lab Life gallery. Photos appear in the order shown here; drag items to reorder them."
+        description: "Homepage-only Lab Life gallery. Photos appear in the order shown here; drag items to reorder them. Images are cropped responsively for the collage and shown uncropped in the viewer. For fast loading, use JPEG/WebP/AVIF photos under 8 MB."
         fields:
           - { name: enabled, label: Show gallery on homepage, type: boolean, default: true }
           - { name: eyebrow, label: Small section label, type: string }

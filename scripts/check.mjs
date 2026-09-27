@@ -123,8 +123,14 @@ for(const [i,photo] of (gallery.photos||[]).entries()){
   const label="site.gallery.photos["+i+"]";
   if(!photo.image || !mediaPath(photo.image,"/media/images/",[".jpg",".jpeg",".png",".webp",".gif",".avif"])) fail(label+".image must be a safe raster /media/images/ path");
   if(!String(photo.alt||"").trim()) fail(label+".alt is required for accessibility");
-  if(photo.date && !/^\d{4}-\d{2}-\d{2}$/.test(String(photo.date))) fail(label+".date must use YYYY-MM-DD");
+  if(photo.date){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(photo.date))) fail(label+".date must use YYYY-MM-DD");
+    const parsed=new Date(String(photo.date)+"T00:00:00Z");
+    if(Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0,10)!==String(photo.date)) fail(label+".date is not a real calendar date");
+  }
   if(photo.focus && !["center","top","bottom","left","right"].includes(photo.focus)) fail(label+".focus is invalid");
+  const galleryFile=path.join(ROOT,String(photo.image).replace(/^\//,""));
+  if(fs.existsSync(galleryFile) && fs.statSync(galleryFile).size>8*1024*1024) fail(label+".image exceeds the 8 MB gallery limit");
   if(photo.featured && photo.visible!==false) featuredGalleryPhotos+=1;
   if(galleryImages.has(photo.image)) fail(label+" duplicates another gallery image");
   galleryImages.add(photo.image);
