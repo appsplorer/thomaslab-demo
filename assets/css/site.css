@@ -2314,3 +2314,32 @@ main > section.tl-page-shell.tl-page-shell.tl-page-shell--narrow{
     height:40px;
   }
 }
+
+
+/* ===== Micro QA: research-card icon badge consistency ===== */
+.tl-research-card__top>i{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(186,12,47,.15);
+  border-radius:50%;
+  background:#fff;
+  color:var(--uga-red);
+  font-size:1.08rem;
+  box-shadow:0 8px 22px rgba(61,44,44,.045);
+  transition:transform .3s ease,background .3s ease,color .3s ease,border-color .3s ease;
+}
+.tl-research-card:hover .tl-research-card__top>i{
+  transform:translateY(-3px) rotate(-4deg);
+  background:var(--uga-red);
+  color:#fff;
+  border-color:var(--uga-red);
+}
+@media(max-width:600px){
+  .tl-research-card__top>i{
+    width:42px;
+    height:42px;
+    font-size:1rem;
+  }
+}
