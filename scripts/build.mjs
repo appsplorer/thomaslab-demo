@@ -44,7 +44,7 @@ const socialLinks=()=>site.socials?.map(s=>`<a href="${esc(s.url)}" target="_bla
 const sri=(file)=>"sha384-"+crypto.createHash("sha384").update(fs.readFileSync(path.join(ROOT,file))).digest("base64");
 const SITE_CSS_SRI=sri("assets/css/site.css");
 const SITE_JS_SRI=sri("assets/js/site.js");
-const FONT_AWESOME_SRI="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==";
+const FONT_AWESOME_SRI=sri("assets/vendor/fontawesome/css/all.min.css");
 
 function structured(title,description,route,type="WebPage"){
   return JSON.stringify({"@context":"https://schema.org","@graph":[
@@ -75,8 +75,8 @@ function head({title,description,route="/",type="WebPage"}){
 <meta property="og:type" content="website"><meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="${esc(full)}"><meta name="twitter:description" content="${esc(description)}">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' 'sha256-${hash}'; script-src-attr 'none'; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; form-action 'none'; require-trusted-types-for 'script'; upgrade-insecure-requests">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="${FONT_AWESOME_SRI}" crossorigin="anonymous" referrerpolicy="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' 'sha256-${hash}'; script-src-attr 'none'; style-src 'self'; font-src 'self'; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; form-action 'none'; require-trusted-types-for 'script'; upgrade-insecure-requests">
+<link rel="stylesheet" href="${href("/assets/vendor/fontawesome/css/all.min.css")}" integrity="${FONT_AWESOME_SRI}">
 <link rel="stylesheet" href="${href("/assets/css/site.css")}" integrity="${SITE_CSS_SRI}">
 <script type="application/ld+json">${json}</script>
 <script src="${href("/assets/js/site.js")}" integrity="${SITE_JS_SRI}" defer></script>
@@ -283,6 +283,7 @@ ensure(path.join(OUT,"assets/css")); ensure(path.join(OUT,"assets/js"));
 fs.copyFileSync(path.join(ROOT,"assets/css/site.css"),path.join(OUT,"assets/css/site.css"));
 fs.copyFileSync(path.join(ROOT,"assets/js/site.js"),path.join(OUT,"assets/js/site.js"));
 fs.copyFileSync(path.join(ROOT,"assets/favicon.svg"),path.join(OUT,"assets/favicon.svg"));
+fs.cpSync(path.join(ROOT,"assets/vendor"),path.join(OUT,"assets/vendor"),{recursive:true});
 fs.writeFileSync(path.join(OUT,".nojekyll"),"");
 const mediaDir=path.join(ROOT,"media");
 if(fs.existsSync(mediaDir)) fs.cpSync(mediaDir,path.join(OUT,"media"),{recursive:true});
