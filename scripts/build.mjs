@@ -170,8 +170,8 @@ function personLinkAttrs(link){
   const url=String(personLinkHref(link)||"");
   return /^https?:/i.test(url)?' target="_blank" rel="noopener noreferrer"':"";
 }
-function personQuickLinks(p,{compact=false}={}){
-  const links=personProfessionalLinks(p);
+function personQuickLinks(p,{compact=false,includeEmail=true}={}){
+  const links=personProfessionalLinks(p).filter(link=>includeEmail||String(link.label||"").toLowerCase()!=="email");
   if(!links.length) return "";
   return `<div class="${compact?"tl-member-socials":"tl-person-links"}">${links.map(link=>`<a href="${esc(personLinkHref(link))}"${personLinkAttrs(link)} aria-label="${esc(link.label)}"${compact?' title="'+esc(link.label)+'"':""}><i class="${esc(link.icon||"fa-solid fa-link")}"></i>${compact?"":esc(link.label)}</a>`).join("")}</div>`;
 }
@@ -197,7 +197,7 @@ function peoplePage(){
  return pageHero("People","A focused lab built for deep collaboration.","Meet current members, collaborators, and alumni across pharmacy, clinical research, data science, and computational health.")+`<section class="tl-page-shell">${piBlock}${teamBlock}${alumniBlock}</section>`;
 }
 function personPage(p){
- const links=personQuickLinks(p);
+ const links=personQuickLinks(p,{includeEmail:false});
  const education=(p.education||[]).map(x=>`<li><strong>${esc(x.label)}</strong><span>${esc(x.detail)}</span></li>`).join("");
  const honors=(p.honors||[]).map(x=>`<li><span>${esc(x.year||"")}</span><div><strong>${esc(x.title)}</strong>${x.detail?`<small>${esc(x.detail)}</small>`:""}</div></li>`).join("");
  const memberProjects=(p.current_projects||[]).map(slug=>projects.find(x=>x.slug===slug)).filter(Boolean);
