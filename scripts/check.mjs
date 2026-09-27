@@ -69,7 +69,7 @@ for(const name of datasetNames){
 
     if(row.pdf && !mediaPath(row.pdf,"/media/pdfs/",[".pdf"])) fail(label+".pdf must be a safe /media/pdfs/*.pdf path");
     if(row.cv && !mediaPath(row.cv,"/media/pdfs/",[".pdf"])) fail(label+".cv must be a safe /media/pdfs/*.pdf path");
-    if(row.image && !mediaPath(row.image,"/media/images/",[".jpg",".jpeg",".png",".webp",".gif",".avif",".svg"])) fail(label+".image must be a safe /media/images/ image path");
+    if(row.image && !mediaPath(row.image,"/media/images/",[".jpg",".jpeg",".png",".webp",".gif",".avif"])) fail(label+".image must be a safe raster /media/images/ path");
     if(row.photo && !mediaPath(row.photo,"/media/images/",[".jpg",".jpeg",".png",".webp",".gif",".avif"])) fail(label+".photo must be a safe raster /media/images/ path");
 
     checkIcon(row.icon,label+".icon");
@@ -117,6 +117,30 @@ for(const [i,social] of (site.socials||[]).entries()){
 
 for(const required of [".pages.yml","SECURITY.md","assets/css/site.css","assets/js/site.js","assets/favicon.svg","scripts/build.mjs","scripts/check-output.mjs"]){
   if(!fs.existsSync(path.join(ROOT,required))) fail("Missing required source file: "+required);
+}
+
+// Only passive, expected media types may be published from CMS-controlled media folders.
+const mediaRules=[
+  ["media/images",new Set([".jpg",".jpeg",".png",".webp",".gif",".avif",".gitkeep"])],
+  ["media/pdfs",new Set([".pdf",".gitkeep"])]
+];
+for(const [relDir,allowed] of mediaRules){
+  const dir=path.join(ROOT,relDir);
+  if(!fs.existsSync(dir)) continue;
+  const stack=[dir];
+  while(stack.length){
+    const current=stack.pop();
+    for(const entry of fs.readdirSync(current,{withFileTypes:true})){
+      const full=path.join(current,entry.name);
+      if(entry.isDirectory()){stack.push(full);continue}
+      const ext=entry.name===".gitkeep"?".gitkeep":path.extname(entry.name).toLowerCase();
+      if(!allowed.has(ext)) fail("Unsafe or unsupported media type in "+path.relative(ROOT,full));
+    }
+  }
+}
+if(fs.existsSync(path.join(ROOT,"media/documents"))) {
+  const extra=fs.readdirSync(path.join(ROOT,"media/documents")).filter(x=>x!==".gitkeep");
+  if(extra.length) fail("Unused media/documents folder contains publishable files");
 }
 
 // Prevent common credential files and high-confidence secret formats from entering production history.
