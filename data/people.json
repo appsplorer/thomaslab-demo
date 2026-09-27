@@ -64,6 +64,12 @@
     "start_year": 2025,
     "end_year": null,
     "next_position": "",
-    "featured": true
+    "featured": true,
+    "current_projects": [
+      "clinical-nlp-adverse-event-phenotyping",
+      "precision-antiplatelet-therapy",
+      "hybrid-real-world-evidence"
+    ],
+    "research_statement": "My research focuses on clinically grounded precision therapeutics: identifying how genetic variation, treatment context, and real-world clinical data can be integrated to improve medication selection, effectiveness, and safety. The lab uses pharmacogenomics, cardiovascular pharmacotherapy, clinical NLP, and transparent computational methods to generate evidence that can translate into patient care."
   }
 ]
