@@ -170,3 +170,77 @@ document.addEventListener("click",(event)=>{
   if(!a) return;
   if(a.target==="_blank") a.rel="noopener noreferrer";
 });
+
+
+/* ---------- user-friendly utilities: publication search, copy citation, back to top ---------- */
+(() => {
+  'use strict';
+
+  const publicationSearch = document.querySelector('[data-publication-search]');
+  if (publicationSearch) {
+    const cards = [...document.querySelectorAll('[data-publication-card]')];
+    const years = [...document.querySelectorAll('[data-publication-year]')];
+    const count = document.querySelector('[data-publication-count]');
+    const empty = document.querySelector('[data-publication-empty]');
+
+    const applyFilter = () => {
+      const query = publicationSearch.value.trim().toLowerCase();
+      let visible = 0;
+      for (const card of cards) {
+        const text = (card.dataset.filterText || '').toLowerCase();
+        const match = !query || text.includes(query);
+        card.hidden = !match;
+        if (match) visible += 1;
+      }
+      for (const year of years) {
+        year.hidden = !year.querySelector('[data-publication-card]:not([hidden])');
+      }
+      if (count) count.textContent = String(visible);
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    publicationSearch.addEventListener('input', applyFilter, { passive: true });
+  }
+
+  document.querySelectorAll('[data-copy-text]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const text = button.dataset.copyText || '';
+      if (!text) return;
+      const original = button.innerHTML;
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        copied = document.execCommand('copy');
+        textarea.remove();
+      }
+      if (copied) {
+        button.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        window.setTimeout(() => { button.innerHTML = original; }, 1600);
+      }
+    });
+  });
+
+  const backTop = document.querySelector('[data-backtop]');
+  if (backTop) {
+    const syncBackTop = () => {
+      const show = window.scrollY > Math.max(520, window.innerHeight * 0.7);
+      backTop.classList.toggle('is-visible', show);
+      backTop.tabIndex = show ? 0 : -1;
+      backTop.setAttribute('aria-hidden', show ? 'false' : 'true');
+    };
+    syncBackTop();
+    window.addEventListener('scroll', syncBackTop, { passive: true });
+    backTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+  }
+})();
