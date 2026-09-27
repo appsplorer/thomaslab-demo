@@ -95,7 +95,7 @@ for(const file of htmlFiles){
     if(!/\balt=["'][^"']*["']/i.test(tag[0])) fail(path.relative(OUT,file)+" has image without alt attribute");
   }
 }
-for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js"]){
+for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg"]){
   if(!fs.existsSync(path.join(OUT,required))) fail("Missing generated asset: "+required);
 }
 console.log("Output validation passed:",htmlFiles.length,"HTML pages and",files.length,"total files.");
