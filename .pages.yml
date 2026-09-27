@@ -302,7 +302,7 @@ content:
       - name: type
         type: select
         options:
-          values: [PhD, Postdoctoral Researcher, Research Assistant, Student Research, Staff, Collaboration, Other]
+          values: [PhD, Postdoctoral Researcher, Research Assistant, Student Research, "Research Assistant / Student Research", Staff, Collaboration, Other]
       - { name: status, type: string, required: true }
       - { name: location, type: string }
       - { name: commitment, type: string }
