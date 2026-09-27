@@ -111,7 +111,9 @@ content:
           media: pdfs
           extensions: [pdf]
           rename: safe
-      - { name: summary, type: text }
+      - { name: summary, label: Plain-language summary, type: text }
+      - { name: abstract, label: Abstract / detailed summary, type: text }
+      - { name: citation, label: Preferred citation, type: text }
       - { name: topics, type: string, list: true }
       - { name: featured, type: boolean, default: false }
 
@@ -156,6 +158,8 @@ content:
       - { name: phone, type: string }
       - { name: office, type: string }
       - { name: research_topics, type: string, list: true }
+      - { name: current_projects, label: Current project slugs, type: string, list: true, description: "Use project slugs from the Projects editor." }
+      - { name: research_statement, label: Research statement, type: text }
       - { name: short_bio, label: Short biography, type: text }
       - name: bio_html
         label: Full biography
@@ -224,6 +228,11 @@ content:
           format: html
           media: images
           rename: safe
+      - { name: lead, label: Project lead, type: string }
+      - { name: collaborators, label: Collaborators, type: string, list: true }
+      - { name: funding, label: Funding / support, type: string, list: true }
+      - { name: start_year, label: Start year, type: number }
+      - { name: end_year, label: End year, type: number }
       - { name: goals, type: string, list: true }
       - { name: methods, type: string, list: true }
       - { name: topics, type: string, list: true }
@@ -283,6 +292,7 @@ content:
           rename: safe
       - { name: external_url, label: External news / source URL, type: string }
       - { name: external_label, label: External source label, type: string }
+      - { name: external_only, label: Open external source directly from archive, type: boolean, default: false }
       - { name: featured, type: boolean, default: false }
 
   - name: opportunities
@@ -306,6 +316,8 @@ content:
       - { name: status, type: string, required: true }
       - { name: location, type: string }
       - { name: commitment, type: string }
+      - { name: funding, label: Funding / compensation, type: string }
+      - { name: start_date, label: Expected start date, type: string }
       - name: posted_date
         type: date
         options:
@@ -320,6 +332,7 @@ content:
           media: images
           rename: safe
       - { name: qualifications, type: string, list: true }
+      - { name: eligibility, label: Eligibility / program requirements, type: string, list: true }
       - { name: how_to_apply, type: string, list: true }
       - { name: contact_email, type: string }
       - { name: external_apply_url, label: External application URL, type: string }
