@@ -2065,3 +2065,69 @@ main > section.tl-page-shell.tl-page-shell.tl-page-shell--narrow{
 .tl-news-card__media>span>i{
   margin:0;
 }
+
+
+/* ===== Micro QA: equal-height cards, stable CTAs and touch-friendly actions ===== */
+.tl-project-grid,
+.tl-news-home__grid,
+.tl-news-archive,
+.tl-opportunity-grid{
+  align-items:stretch;
+}
+.tl-project-card{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+.tl-project-card__body{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+.tl-project-card__body>strong{
+  margin-top:auto;
+  padding-top:22px;
+}
+.tl-news-card{
+  height:100%;
+}
+.tl-news-card>.tl-card-link{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+.tl-news-card__body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.tl-news-card__body>strong{
+  margin-top:auto;
+  padding-top:22px;
+}
+.tl-opportunity-card{
+  min-width:0;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+.tl-opportunity-card>strong{
+  margin-top:auto;
+  padding-top:22px;
+}
+.tl-pub-quick a,
+.tl-member-socials a,
+.tl-backtop,
+.tl-drawer-toggle,
+.tl-drawer__close{
+  min-width:42px;
+  min-height:42px;
+}
+@media(max-width:600px){
+  .tl-pub-quick a,
+  .tl-member-socials a{
+    min-width:40px;
+    min-height:40px;
+  }
+}
