@@ -59,6 +59,52 @@ content:
           - { name: long_description, label: Full research-area description, type: text }
           - { name: methods, label: Methods / approaches, type: string, list: true }
           - { name: project_slugs, label: Related project slugs, type: string, list: true, description: "Use project slugs from the Projects editor." }
+      - name: gallery
+        label: Homepage photo gallery
+        type: object
+        description: "Homepage-only Lab Life gallery. Photos appear in the order shown here; drag items to reorder them."
+        fields:
+          - { name: enabled, label: Show gallery on homepage, type: boolean, default: true }
+          - { name: eyebrow, label: Small section label, type: string }
+          - { name: title, label: Section title, type: string }
+          - { name: description, label: Section introduction, type: text }
+          - name: photos
+            label: Gallery photos
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{caption}"
+            fields:
+              - name: image
+                label: Photo
+                type: image
+                required: true
+                options:
+                  media: images
+                  rename: safe
+              - { name: alt, label: Accessible image description, type: string, required: true, description: "Describe what is visible in the photo for screen-reader users." }
+              - { name: caption, label: Caption, type: string }
+              - name: date
+                label: Date
+                type: date
+                options:
+                  format: yyyy-MM-dd
+              - { name: location, label: Location / event, type: string }
+              - name: focus
+                label: Crop focus
+                type: select
+                default: center
+                options:
+                  values:
+                    - { name: center, label: Center }
+                    - { name: top, label: Top }
+                    - { name: bottom, label: Bottom }
+                    - { name: left, label: Left }
+                    - { name: right, label: Right }
+              - { name: featured, label: Feature this photo, type: boolean, default: false, description: "At most one visible photo should be featured." }
+              - { name: visible, label: Show photo, type: boolean, default: true }
+
       - name: socials
         label: Lab social / profile links
         type: object

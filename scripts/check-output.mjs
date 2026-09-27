@@ -17,6 +17,8 @@ if(htmlFiles.length<20) fail("Unexpectedly small generated site: "+htmlFiles.len
 if(files.some(f=>f.endsWith(".map"))) fail("Production output must not include source-map files");
 
 const datasets=["publications","people","news","projects","opportunities"];
+const siteData=JSON.parse(fs.readFileSync(path.join(process.cwd(),"data/site.json"),"utf8"));
+const expectedGalleryPhotos=(siteData.gallery?.photos||[]).filter(photo=>photo?.image && photo.visible!==false).length;
 for(const name of datasets){
   const rows=JSON.parse(fs.readFileSync(path.join(process.cwd(),"data",name+".json"),"utf8"));
   for(const row of rows){
@@ -123,6 +125,14 @@ for(const file of htmlFiles){
     if(/\bsrc=["']https?:\/\//i.test(tag[0])) fail(path.relative(OUT,file)+" contains a remote runtime image");
   }
 }
+const homeHtml=fs.readFileSync(path.join(OUT,"index.html"),"utf8");
+const renderedGalleryPhotos=(homeHtml.match(/\bdata-gallery-item\b/g)||[]).length;
+if(expectedGalleryPhotos!==renderedGalleryPhotos) fail("Homepage gallery rendered "+renderedGalleryPhotos+" photos but "+expectedGalleryPhotos+" are visible in site.json");
+if(siteData.gallery?.enabled===false && /id=["']lab-life["']/.test(homeHtml)) fail("Homepage gallery is disabled but still rendered");
+if(siteData.gallery?.enabled!==false && !/id=["']lab-life["']/.test(homeHtml)) fail("Homepage gallery is enabled but missing");
+if(expectedGalleryPhotos>0 && !/\bdata-gallery-lightbox\b/.test(homeHtml)) fail("Homepage gallery photos exist but the lightbox is missing");
+if(expectedGalleryPhotos===0 && /\bdata-gallery-lightbox\b/.test(homeHtml)) fail("Homepage gallery lightbox should not render without photos");
+
 for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg","assets/vendor/fontawesome/css/all.min.css","assets/vendor/fontawesome/webfonts/fa-brands-400.woff2","assets/vendor/fontawesome/webfonts/fa-regular-400.woff2","assets/vendor/fontawesome/webfonts/fa-solid-900.woff2","assets/vendor/fontawesome/webfonts/fa-v4compatibility.woff2","SECURITY.md",".well-known/security.txt"]){
   if(!fs.existsSync(path.join(OUT,required))) fail("Missing generated asset: "+required);
 }

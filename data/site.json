@@ -149,5 +149,12 @@
       "real-world evidence",
       "medication safety"
     ]
+  },
+  "gallery": {
+    "enabled": true,
+    "eyebrow": "Lab life",
+    "title": "The people and moments behind the work.",
+    "description": "Conferences, celebrations, get-togethers, and everyday moments from the Thomas Lab community.",
+    "photos": []
   }
 }

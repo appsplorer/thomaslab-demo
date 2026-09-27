@@ -115,6 +115,23 @@ for(const [i,social] of (site.socials||[]).entries()){
   checkIcon(social.icon,"site.socials["+i+"].icon");
 }
 
+const gallery=site.gallery||{};
+if(gallery.photos && !Array.isArray(gallery.photos)) fail("site.gallery.photos must be an array");
+let featuredGalleryPhotos=0;
+const galleryImages=new Set();
+for(const [i,photo] of (gallery.photos||[]).entries()){
+  const label="site.gallery.photos["+i+"]";
+  if(!photo.image || !mediaPath(photo.image,"/media/images/",[".jpg",".jpeg",".png",".webp",".gif",".avif"])) fail(label+".image must be a safe raster /media/images/ path");
+  if(!String(photo.alt||"").trim()) fail(label+".alt is required for accessibility");
+  if(photo.date && !/^\d{4}-\d{2}-\d{2}$/.test(String(photo.date))) fail(label+".date must use YYYY-MM-DD");
+  if(photo.focus && !["center","top","bottom","left","right"].includes(photo.focus)) fail(label+".focus is invalid");
+  if(photo.featured && photo.visible!==false) featuredGalleryPhotos+=1;
+  if(galleryImages.has(photo.image)) fail(label+" duplicates another gallery image");
+  galleryImages.add(photo.image);
+}
+if(featuredGalleryPhotos>1) fail("site.gallery may have at most one visible featured photo");
+if((gallery.photos||[]).length>100) fail("site.gallery supports up to 100 photos to protect homepage performance");
+
 for(const required of [".pages.yml","SECURITY.md","assets/css/site.css","assets/js/site.js","assets/favicon.svg","assets/vendor/fontawesome/css/all.min.css","assets/vendor/fontawesome/webfonts/fa-brands-400.woff2","assets/vendor/fontawesome/webfonts/fa-regular-400.woff2","assets/vendor/fontawesome/webfonts/fa-solid-900.woff2","assets/vendor/fontawesome/webfonts/fa-v4compatibility.woff2","scripts/build.mjs","scripts/check-output.mjs"]){
   if(!fs.existsSync(path.join(ROOT,required))) fail("Missing required source file: "+required);
 }

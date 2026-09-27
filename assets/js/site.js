@@ -233,6 +233,73 @@ document.addEventListener("click",(event)=>{
     });
   });
 
+  /* ---------- homepage gallery lightbox ---------- */
+  const galleryItems = [...document.querySelectorAll('[data-gallery-item]')];
+  const galleryDialog = document.querySelector('[data-gallery-lightbox]');
+  if (galleryItems.length && galleryDialog instanceof HTMLDialogElement) {
+    const galleryImage = galleryDialog.querySelector('[data-gallery-image]');
+    const galleryCaption = galleryDialog.querySelector('[data-gallery-caption]');
+    const galleryMeta = galleryDialog.querySelector('[data-gallery-meta]');
+    const galleryCounter = galleryDialog.querySelector('[data-gallery-counter]');
+    const galleryPrev = galleryDialog.querySelector('[data-gallery-prev]');
+    const galleryNext = galleryDialog.querySelector('[data-gallery-next]');
+    const galleryClose = galleryDialog.querySelector('[data-gallery-close]');
+    let currentIndex = 0;
+    let opener = null;
+
+    const renderGalleryItem = (index) => {
+      currentIndex = (index + galleryItems.length) % galleryItems.length;
+      const item = galleryItems[currentIndex];
+      if (galleryImage) {
+        galleryImage.src = item.dataset.gallerySrc || '';
+        galleryImage.alt = item.dataset.galleryAlt || '';
+      }
+      if (galleryCaption) galleryCaption.textContent = item.dataset.galleryCaption || 'Lab life';
+      if (galleryMeta) {
+        galleryMeta.textContent = item.dataset.galleryMeta || '';
+        galleryMeta.hidden = !(item.dataset.galleryMeta || '');
+      }
+      if (galleryCounter) galleryCounter.textContent = String(currentIndex + 1).padStart(2, '0') + ' / ' + String(galleryItems.length).padStart(2, '0');
+      if (galleryPrev) galleryPrev.hidden = galleryItems.length < 2;
+      if (galleryNext) galleryNext.hidden = galleryItems.length < 2;
+    };
+
+    const openGallery = (index, source) => {
+      opener = source;
+      renderGalleryItem(index);
+      document.documentElement.classList.add('tl-lightbox-open');
+      galleryDialog.showModal();
+      window.setTimeout(() => galleryClose?.focus(), 0);
+    };
+
+    const closeGallery = () => {
+      if (galleryDialog.open) galleryDialog.close();
+    };
+
+    galleryItems.forEach((item, index) => item.addEventListener('click', () => openGallery(index, item)));
+    galleryPrev?.addEventListener('click', () => renderGalleryItem(currentIndex - 1));
+    galleryNext?.addEventListener('click', () => renderGalleryItem(currentIndex + 1));
+    galleryClose?.addEventListener('click', closeGallery);
+
+    galleryDialog.addEventListener('click', (event) => {
+      if (event.target === galleryDialog) closeGallery();
+    });
+    galleryDialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('tl-lightbox-open');
+      if (galleryImage) galleryImage.removeAttribute('src');
+      if (opener instanceof HTMLElement) opener.focus();
+    });
+    galleryDialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft' && galleryItems.length > 1) {
+        event.preventDefault();
+        renderGalleryItem(currentIndex - 1);
+      } else if (event.key === 'ArrowRight' && galleryItems.length > 1) {
+        event.preventDefault();
+        renderGalleryItem(currentIndex + 1);
+      }
+    });
+  }
+
   const backTop = document.querySelector('[data-backtop]');
   if (backTop) {
     const scrollPosition = () => Math.max(
