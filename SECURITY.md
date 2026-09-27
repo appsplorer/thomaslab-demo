@@ -1,20 +1,30 @@
-# Security
+# Security Policy
 
-Thomas Lab is deployed as a static site. It has no public database, server-side session, WordPress/PHP runtime, or custom website authentication endpoint.
+Thomas Lab is a static research website. It does not provide visitor accounts, accept passwords, store visitor data in a database, or process payments.
 
-## Controls
+## Reporting a security issue
 
-- GitHub is the source of truth and preserves change history.
-- Pages CMS authentication is handled through its GitHub integration; no lab password database is stored in this repository.
-- GitHub Actions uses minimum deployment permissions.
-- Source data is validated before each build.
-- Generated output is checked for broken local links, unsafe URL schemes, missing assets, placeholder content, and unsafe `target="_blank"` links.
-- CMS-authored rich text is sanitized during generation and scripts use a restrictive Content Security Policy.
-- External links opened in a new tab use `noopener noreferrer`.
-- The public build contains no secrets.
+If you discover a security issue affecting this website, report it privately to **CDThomas@uga.edu**. Include the affected URL, a concise description, and reproduction steps when appropriate.
 
-## Reporting
+Do not publish credentials, tokens, personal data, protected health information, restricted research data, or exploit details in a public issue.
 
-Do not commit API keys, access tokens, private participant information, PHI, or restricted research data to this repository.
+## Security model
 
-For a website security issue, contact the repository owner privately rather than publishing sensitive exploit details in a public issue.
+- Public pages are generated as static HTML, CSS, JavaScript, images, and permitted PDFs.
+- GitHub is the source of truth and preserves the change history.
+- Pages CMS relies on authorized GitHub access; this repository does not contain a separate lab password database.
+- Source data is validated before every production build.
+- CMS-authored rich text is sanitized at build time.
+- The generated site is checked for broken local links, unsafe URL schemes, invalid page structure, unsafe new-tab links, missing assets, and accidental placeholder/internal text.
+- The production Content Security Policy restricts scripts, frames, forms, workers, and external resources.
+- Production CSS and JavaScript are protected with Subresource Integrity hashes; the Font Awesome stylesheet is also SRI-pinned.
+- GitHub Actions used by the deployment workflow are pinned to exact commit SHAs.
+- No credential, token, API key, or private research data is intended to be present in client-side code.
+
+## Important limitation
+
+Anything delivered to a web browser—HTML, CSS, JavaScript, images, fonts, and public PDFs—must be treated as public. Minification or obfuscation can make source less convenient to read, but it is not encryption and does not prevent retrieval by a visitor.
+
+## Scope
+
+Security reports should concern the Thomas Lab website or this repository's deployment configuration. University-wide systems, GitHub, Pages CMS, browsers, and third-party services have their own security programs and should be reported to the relevant provider when the issue is outside this repository.
