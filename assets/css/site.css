@@ -1848,7 +1848,9 @@ main > section.tl-page-shell.tl-page-shell.tl-page-shell--narrow{
   .tl-research-details-head{grid-template-columns:1fr;gap:20px}
   .tl-research-details-head>.tl-kicker{grid-column:auto;margin-bottom:0}
   .tl-research-detail,
-  .tl-research-detail--reverse{grid-template-columns:1fr}
+  .tl-research-detail--reverse{grid-template-columns:minmax(0,1fr)}
+  .tl-research-detail__visual,
+  .tl-research-detail__content{min-width:0}
   .tl-research-detail--reverse .tl-research-detail__visual{order:0;border-left:0}
   .tl-research-detail__visual{min-height:250px;border-right:0;border-bottom:1px solid var(--tl-line)}
   .tl-research-detail__content{padding:38px}
