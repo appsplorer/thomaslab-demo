@@ -27,6 +27,27 @@
     revealItems.forEach((el) => revealObserver.observe(el));
   }
 
+  /* ---------- pause continuous decorative motion when off-screen ---------- */
+  if ('IntersectionObserver' in window && !isReduced()) {
+    const motionTargets = [...document.querySelectorAll([
+      '.tl-constellation',
+      '.tl-page-hero',
+      '.tl-project-signal',
+      '.tl-research-detail__orbit',
+      '.tl-gallery-empty__signal',
+      '.tl-join__rings',
+      '.tl-footer-orbit'
+    ].join(','))];
+    if (motionTargets.length) {
+      const motionObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          entry.target.classList.toggle('tl-motion-paused', !entry.isIntersecting);
+        }
+      }, { rootMargin: '180px 0px 180px 0px', threshold: 0 });
+      motionTargets.forEach((target) => motionObserver.observe(target));
+    }
+  }
+
   /* ---------- hero constellation pointer field ---------- */
   const constellation = document.querySelector('[data-constellation]');
   if (constellation && finePointer.matches && !isReduced()) {

@@ -146,7 +146,7 @@ content:
       - { name: type, label: Publication type, type: string }
       - { name: doi, label: DOI, type: string }
       - { name: pubmed, label: PubMed URL, type: string }
-      - { name: external_url, label: Title / external publication URL, type: string, required: true }
+      - { name: external_url, label: Publisher / external publication URL, type: string, description: "Optional when a PubMed URL or DOI is supplied. Publication titles use this URL first, then PubMed, then DOI." }
       - name: pdf
         label: Full-text PDF
         type: file

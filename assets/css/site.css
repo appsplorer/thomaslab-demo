@@ -3065,3 +3065,14 @@ html.tl-lightbox-open{overflow:hidden}
     animation:none!important;
   }
 }
+
+
+/* ===== Release QA: off-screen continuous-motion pause ===== */
+.tl-motion-paused,
+.tl-motion-paused::before,
+.tl-motion-paused::after,
+.tl-motion-paused *,
+.tl-motion-paused *::before,
+.tl-motion-paused *::after{
+  animation-play-state:paused!important;
+}

@@ -44,6 +44,9 @@ const localTarget=(raw)=>{
 
 for(const file of htmlFiles){
   const html=fs.readFileSync(file,"utf8");
+  if(!html.includes('class="tl-skip-link"') || !html.includes('id="main-content" tabindex="-1"')) fail(path.relative(OUT,file)+" is missing the accessible skip-link target");
+  if(!html.includes("tl-footer-orbit")) fail(path.relative(OUT,file)+" is missing the shared orbital footer");
+  if(/class=["'][^"']*(?:signal-line|signal-dot)/.test(html)) fail(path.relative(OUT,file)+" still contains a legacy footer signal");
   for(const marker of ["Sample Member","Research update 1","Structured content is being migrated","through the admin panel","easy to maintain"]){
     if(html.includes(marker)) fail(path.relative(OUT,file)+" still contains placeholder text: "+marker);
   }
@@ -85,6 +88,13 @@ for(const file of htmlFiles){
     if(seenIds.has(id)) fail(path.relative(OUT,file)+" contains duplicate id: "+id);
     seenIds.add(id);
   }
+  const titleMatch=html.match(/<title>([^<]*)<\/title>/i);
+  const descriptionMatch=html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i);
+  const canonicalMatch=html.match(/<link\b[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["'][^>]*>/i);
+  if(!titleMatch || titleMatch[1].trim().length<10 || titleMatch[1].trim().length>70) fail(path.relative(OUT,file)+" has an invalid SEO title length");
+  if(!descriptionMatch || descriptionMatch[1].trim().length<40 || descriptionMatch[1].trim().length>165) fail(path.relative(OUT,file)+" has an invalid meta-description length");
+  if(!canonicalMatch || !/^https:\/\//i.test(canonicalMatch[1])) fail(path.relative(OUT,file)+" is missing an absolute HTTPS canonical URL");
+  if(path.basename(file)==="404.html" && !/<meta\b[^>]*name=["']robots["'][^>]*content=["']noindex,follow["']/i.test(html)) fail("404.html must be noindex,follow");
   const headings=[...html.matchAll(/<h([1-6])\b/gi)].map(m=>Number(m[1]));
   if(headings.length){
     if(headings[0]!==1) fail(path.relative(OUT,file)+" must start its heading outline with h1");
@@ -125,6 +135,21 @@ for(const file of htmlFiles){
     if(/\bsrc=["']https?:\/\//i.test(tag[0])) fail(path.relative(OUT,file)+" contains a remote runtime image");
   }
 }
+const seenTitles=new Map();
+const seenCanonicals=new Map();
+for(const file of htmlFiles){
+  const html=fs.readFileSync(file,"utf8");
+  const title=(html.match(/<title>([^<]*)<\/title>/i)?.[1]||"").trim();
+  const canonical=(html.match(/<link\b[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["'][^>]*>/i)?.[1]||"").trim();
+  if(title){
+    if(seenTitles.has(title)) fail("Duplicate SEO title across "+path.relative(OUT,seenTitles.get(title))+" and "+path.relative(OUT,file)+": "+title);
+    seenTitles.set(title,file);
+  }
+  if(canonical){
+    if(seenCanonicals.has(canonical)) fail("Duplicate canonical URL across generated pages: "+canonical);
+    seenCanonicals.set(canonical,file);
+  }
+}
 const homeHtml=fs.readFileSync(path.join(OUT,"index.html"),"utf8");
 if(!homeHtml.includes("tl-footer-orbit")) fail("Homepage footer is missing the orbital research pathway");
 if(/class=["'][^"']*signal-line/.test(homeHtml)) fail("Legacy linear footer signal is still present");
@@ -148,6 +173,9 @@ if(/sourceMappingURL/i.test(js)) fail("Production JavaScript references a source
 const css=fs.readFileSync(path.join(OUT,"assets/css/site.css"),"utf8");
 if(/@import\s/i.test(css)) fail("Production CSS contains @import; vendor resources must be explicit and CSP-controlled");
 if(/sourceMappingURL/i.test(css)) fail("Production CSS references a source map");
+for(const requiredMotion of ["@keyframes tlOrbitSpin","@keyframes tlOrbitSpinReverse",".tl-motion-paused","@media(prefers-reduced-motion:reduce)"]){
+  if(!css.includes(requiredMotion)) fail("Production CSS is missing motion safeguard: "+requiredMotion);
+}
 const faCss=fs.readFileSync(path.join(OUT,"assets/vendor/fontawesome/css/all.min.css"),"utf8");
 if(/https?:\/\//i.test(faCss.replace(/\/\*[\s\S]*?\*\//g,""))) fail("Self-hosted Font Awesome CSS contains a runtime external URL");
 for(const font of ["fa-brands-400.woff2","fa-regular-400.woff2","fa-solid-900.woff2","fa-v4compatibility.woff2"]){

@@ -4,8 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "check": "node --check scripts/build.mjs && node scripts/check.mjs",
+    "check": "node --check scripts/build.mjs && node --check assets/js/site.js && node scripts/check.mjs",
     "build": "node scripts/build.mjs",
-    "check:output": "node scripts/check-output.mjs"
+    "check:output": "node scripts/check-output.mjs",
+    "verify": "npm run check && npm run build && npm run check:output"
   }
 }

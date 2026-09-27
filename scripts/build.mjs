@@ -37,6 +37,14 @@ function safeRichHtml(input=""){
 const href=(p="/")=>BASE+(p.startsWith("/")?p:"/"+p);
 const absolute=(p="/")=>(ORIGIN||site.site_url||"")+href(p);
 const publicationExternal=(p)=>p.external_url||p.pubmed||(p.doi?"https://doi.org/"+p.doi:href("/publications/"+p.slug+"/"));
+const clipMeta=(value="",max=160)=>{
+  const text=String(value||"").replace(/\s+/g," ").trim();
+  if(text.length<=max) return text;
+  const slice=text.slice(0,Math.max(1,max-1));
+  const boundary=slice.lastIndexOf(" ");
+  const cut=boundary>=Math.floor(max*.68)?slice.slice(0,boundary):slice;
+  return cut.replace(/[\s,;:.!?–—-]+$/,"")+"…";
+};
 const slugify=(s="")=>String(s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
 const ensure=(p)=>fs.mkdirSync(p,{recursive:true});
 const renderedRoutes=[];
@@ -60,6 +68,11 @@ function structured(title,description,route,type="WebPage"){
 }
 function head({title,description,route="/",type="WebPage"}){
   const full=title===site.name?site.seo.title:`${title} | ${site.name}`;
+  const suffix=` | ${site.name}`;
+  const metaTitle=title===site.name?clipMeta(full,65):(full.length<=65?full:clipMeta(title,Math.max(32,65-suffix.length))+suffix);
+  const metaDescription=clipMeta(description,160);
+  const robots=route==="/404.html"?"noindex,follow":"index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
+  const ogType=type==="Article"||type==="ScholarlyArticle"?"article":type==="ProfilePage"?"profile":"website";
   const json=structured(full,description,route,type)
     .replace(/</g,"\\u003c")
     .replace(/>/g,"\\u003e")
@@ -70,16 +83,16 @@ function head({title,description,route="/",type="WebPage"}){
   const canonical=absolute(route);
   return `<head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>${esc(full)}</title><meta name="description" content="${esc(description)}">
+<title>${esc(metaTitle)}</title><meta name="description" content="${esc(metaDescription)}">
 <meta name="keywords" content="${esc((site.seo.keywords||[]).join(", "))}">
 <meta name="author" content="${esc(site.name)}"><meta name="theme-color" content="#BA0C2F">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/svg+xml" href="${href("/assets/favicon.svg")}">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="robots" content="${esc(robots)}">
 <link rel="canonical" href="${esc(canonical)}">
-<meta property="og:type" content="website"><meta property="og:site_name" content="${esc(site.name)}">
-<meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="${esc(full)}"><meta name="twitter:description" content="${esc(description)}">
+<meta property="og:type" content="${esc(ogType)}"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="${esc(site.name)}">
+<meta property="og:title" content="${esc(metaTitle)}"><meta property="og:description" content="${esc(metaDescription)}"><meta property="og:url" content="${esc(canonical)}">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="${esc(metaTitle)}"><meta name="twitter:description" content="${esc(metaDescription)}">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' 'sha256-${hash}'; script-src-attr 'none'; style-src 'self'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; form-action 'none'; require-trusted-types-for 'script'; upgrade-insecure-requests">
 <link rel="stylesheet" href="${href("/assets/vendor/fontawesome/css/all.min.css")}" integrity="${FONT_AWESOME_SRI}">
 <link rel="stylesheet" href="${href("/assets/css/site.css")}" integrity="${SITE_CSS_SRI}">
@@ -119,7 +132,7 @@ function shell({route,title,description,content,type="WebPage"}){
 
 
 function projectCard(p){
- return `<a class="tl-project-card tl-hover-card tl-card-link reveal" data-tilt data-spotlight href="${href("/projects/"+p.slug+"/")}"><div class="tl-project-card__visual">${p.image?`<img src="${href(p.image)}" alt="" loading="lazy" decoding="async">`:`<div class="tl-project-signal"><i class="${esc(p.icon||"fa-solid fa-diagram-project")}"></i><span></span><span></span><span></span></div>`}</div><div class="tl-project-card__body"><span>${esc(p.status||"Research program")}</span><h3>${esc(p.title)}</h3><small>${esc(p.subtitle||"")}</small><p>${esc(p.short_description||p.summary||"")}</p><div class="tl-tags">${(p.topics||[]).slice(0,3).map(t=>`<small>${esc(t)}</small>`).join("")}</div><strong>View project <i class="fa-solid fa-arrow-right"></i></strong></div></a>`;
+ return `<a class="tl-project-card tl-hover-card tl-card-link reveal" data-tilt data-spotlight href="${href("/projects/"+p.slug+"/")}"><div class="tl-project-card__visual">${p.image?`<img src="${href(p.image)}" alt="" loading="lazy" decoding="async">`:`<div class="tl-project-signal" aria-hidden="true"><i class="${esc(p.icon||"fa-solid fa-diagram-project")}"></i><span></span><span></span><span></span></div>`}</div><div class="tl-project-card__body"><span>${esc(p.status||"Research program")}</span><h3>${esc(p.title)}</h3><small>${esc(p.subtitle||"")}</small><p>${esc(p.short_description||p.summary||"")}</p><div class="tl-tags">${(p.topics||[]).slice(0,3).map(t=>`<small>${esc(t)}</small>`).join("")}</div><strong>View project <i class="fa-solid fa-arrow-right"></i></strong></div></a>`;
 }
 function projectHome(){
  const featured=projects.filter(p=>p.featured).slice(0,3);
@@ -285,7 +298,7 @@ const hero=`<section class="tl-hero tl-hero--light" data-size="full"><div class=
 const researchDetails=site.research_areas.map((area,i)=>{
   const slug=slugify(area.title);
   const related=(area.project_slugs||[]).map(projectSlug=>projects.find(p=>p.slug===projectSlug)).filter(Boolean);
-  return `<article id="${esc(slug)}-detail" class="tl-research-detail reveal${i%2?" tl-research-detail--reverse":""}"><div class="tl-research-detail__visual"><span>${esc(area.number||String(i+1).padStart(2,"0"))}</span><i class="${esc(area.icon||"fa-solid fa-flask")}"></i><div class="tl-research-detail__orbit"><b></b><b></b><b></b></div></div><div class="tl-research-detail__content"><span class="tl-kicker">Research pillar</span><h2>${esc(area.title)}</h2><p>${esc(area.long_description||area.description||"")}</p>${(area.methods||[]).length?`<div class="tl-research-methods"><strong>Methods & approaches</strong><div>${area.methods.map(method=>`<span>${esc(method)}</span>`).join("")}</div></div>`:""}${related.length?`<div class="tl-research-related"><strong>Related programs</strong>${related.map(project=>`<a href="${href("/projects/"+project.slug+"/")}"><span>${esc(project.title)}</span><i class="fa-solid fa-arrow-right"></i></a>`).join("")}</div>`:""}</div></article>`;
+  return `<article id="${esc(slug)}-detail" class="tl-research-detail reveal${i%2?" tl-research-detail--reverse":""}"><div class="tl-research-detail__visual"><span>${esc(area.number||String(i+1).padStart(2,"0"))}</span><i class="${esc(area.icon||"fa-solid fa-flask")}"></i><div class="tl-research-detail__orbit" aria-hidden="true"><b></b><b></b><b></b></div></div><div class="tl-research-detail__content"><span class="tl-kicker">Research pillar</span><h2>${esc(area.title)}</h2><p>${esc(area.long_description||area.description||"")}</p>${(area.methods||[]).length?`<div class="tl-research-methods"><strong>Methods & approaches</strong><div>${area.methods.map(method=>`<span>${esc(method)}</span>`).join("")}</div></div>`:""}${related.length?`<div class="tl-research-related"><strong>Related programs</strong>${related.map(project=>`<a href="${href("/projects/"+project.slug+"/")}"><span>${esc(project.title)}</span><i class="fa-solid fa-arrow-right"></i></a>`).join("")}</div>`:""}</div></article>`;
 }).join("");
 
 write("/",shell({route:"/",title:site.name,description:site.seo.description,content:hero+`<section class="tl-section tl-research-section"><div class="tl-section__head reveal"><div><span class="tl-kicker">Research system</span><h2>Six connected ways we turn data into evidence.</h2></div><p>Therapeutics, clinical data science, and precision medicine operate here as one connected program—not as isolated projects.</p></div><div class="tl-research-grid">${homeResearch}</div></section>${projectHome()}${publicationHome()}${newsHome()}${galleryHome()}<section class="tl-join tl-join--light"><div><span class="tl-kicker">Join the lab</span><h2>Build better evidence with us.</h2><p>Students and collaborators interested in precision medicine, clinical informatics, pharmacogenomics, and trustworthy healthcare AI are welcome to explore current opportunities.</p><a class="tl-button tl-button--primary" href="${href("/opportunities/")}">View opportunities <i class="fa-solid fa-arrow-right"></i></a></div></section>`}));
@@ -308,7 +321,7 @@ for(const opportunity of opportunities){write("/opportunities/"+opportunity.slug
 
 write("/contact/",shell({route:"/contact/",title:"Contact",description:"Contact Thomas Lab at the University of Georgia College of Pharmacy.",content:pageHero("Contact","Start with the research question.","For research, student, and collaboration inquiries, contact the lab using the details below.")+`<section class="tl-page-shell tl-contact-shell"><div class="tl-contact-card reveal" data-spotlight><div class="tl-contact-card__identity"><span class="tl-kicker">Thomas Lab</span><h2>${esc(site.department)}</h2><p>${esc(site.affiliation)}<br>${esc(site.office)} · ${esc(site.location)}</p><div class="tl-person-links tl-contact-actions"><a href="mailto:${esc(site.email)}"><i class="fa-regular fa-envelope"></i> ${esc(site.email)}</a><a href="tel:${esc(site.phone.replace(/\s/g,""))}"><i class="fa-solid fa-phone"></i> ${esc(site.phone)}</a></div><div class="tl-socials tl-contact-socials">${socialLinks()}</div></div><div class="tl-contact-card__routes"><span class="tl-kicker">Useful paths</span><a href="${href("/opportunities/")}"><span class="tl-contact-route__icon"><i class="fa-solid fa-user-graduate"></i></span><span><strong>Students & researchers</strong><small>See current PhD, RA, student-research, and collaboration listings.</small></span><i class="fa-solid fa-arrow-right"></i></a><a href="${href("/research/")}"><span class="tl-contact-route__icon"><i class="fa-solid fa-flask"></i></span><span><strong>Research & collaboration</strong><small>Explore the lab's research pillars and active programs first.</small></span><i class="fa-solid fa-arrow-right"></i></a><a href="${href("/publications/")}"><span class="tl-contact-route__icon"><i class="fa-solid fa-book-open"></i></span><span><strong>Publications</strong><small>Browse selected peer-reviewed work and publication details.</small></span><i class="fa-solid fa-arrow-right"></i></a></div></div></section>`}));
 
-write("404.html",`<!doctype html><html lang="en">${head({title:"Page not found",description:"The requested Thomas Lab page could not be found.",route:"/404.html"})}<body>${header("")}<main id="main-content"><section class="tl-page-hero"><span class="tl-kicker">404</span><h1>That page is not here.</h1><p>Use the navigation or return to the Thomas Lab homepage.</p></section><section class="tl-page-shell"><a class="tl-button tl-button--primary" href="${href("/")}">Back home</a></section></main>${footer()}</body></html>`);
+write("404.html",`<!doctype html><html lang="en">${head({title:"Page not found",description:"The requested Thomas Lab page could not be found.",route:"/404.html"})}<body>${header("")}<main id="main-content" tabindex="-1"><section class="tl-page-hero"><span class="tl-kicker">404</span><h1>That page is not here.</h1><p>Use the navigation or return to the Thomas Lab homepage.</p></section><section class="tl-page-shell"><a class="tl-button tl-button--primary" href="${href("/")}">Back home</a></section></main>${footer()}</body></html>`);
 
 ensure(path.join(OUT,"assets/css")); ensure(path.join(OUT,"assets/js"));
 fs.copyFileSync(path.join(ROOT,"assets/css/site.css"),path.join(OUT,"assets/css/site.css"));
