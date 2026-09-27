@@ -2131,3 +2131,26 @@ main > section.tl-page-shell.tl-page-shell.tl-page-shell--narrow{
     min-height:40px;
   }
 }
+
+
+/* ===== Micro QA: wide archive balance + PI link cleanup ===== */
+.tl-pi-feature__visual{
+  color:inherit;
+  text-decoration:none;
+}
+.tl-pi-feature__visual span{
+  text-decoration:none;
+}
+.tl-profile-link{
+  text-decoration:none;
+}
+.tl-profile-link:hover{
+  text-decoration:none;
+}
+@media(min-width:1181px){
+  .tl-project-grid--archive,
+  .tl-news-archive,
+  .tl-opportunity-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
