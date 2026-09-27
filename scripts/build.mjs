@@ -14,13 +14,20 @@ const projects=JSON.parse(fs.readFileSync(path.join(ROOT,"data/projects.json"),"
 const opportunities=JSON.parse(fs.readFileSync(path.join(ROOT,"data/opportunities.json"),"utf8"));
 
 const esc=(s="")=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const safeEmbeddedUrl=(value="")=>{
+  const v=String(value).trim();
+  return v==="" || v.startsWith("/") || v.startsWith("#") || /^(https:\/\/|mailto:|tel:)/i.test(v);
+};
 function safeRichHtml(input=""){
   return String(input||"")
-    .replace(/<(script|iframe|object|embed|form|style)\b[\s\S]*?<\/\1\s*>/gi,"")
-    .replace(/<(script|iframe|object|embed|form|style)\b[^>]*\/?>/gi,"")
-    .replace(/\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi,"")
-    .replace(/\sstyle\s*=\s*(?:"[^"]*"|'[^']*')/gi,"")
-    .replace(/\s(href|src)\s*=\s*(["'])\s*javascript:[\s\S]*?\2/gi,' $1="#"');
+    .replace(/<(script|iframe|object|embed|form|style|svg|math|template|base|meta|link)\b[\s\S]*?<\/\1\s*>/gi,"")
+    .replace(/<(script|iframe|object|embed|form|style|svg|math|template|base|meta|link)\b[^>]*\/?>/gi,"")
+    .replace(/\s(?:on[a-z]+|style|srcdoc|formaction)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi,"")
+    .replace(/\ssrcset\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi,"")
+    .replace(/\s(href|src)\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/gi,(match,attr,raw,dq,sq,bare)=>{
+      const value=dq??sq??bare??"";
+      return safeEmbeddedUrl(value)?` ${attr}="${value.replace(/"/g,"&quot;")}"`:` ${attr}="#"`;
+    });
 }
 const href=(p="/")=>BASE+(p.startsWith("/")?p:"/"+p);
 const absolute=(p="/")=>(ORIGIN||site.site_url||"")+href(p);
@@ -34,6 +41,10 @@ const write=(route,html)=>{
   ensure(path.dirname(target)); fs.writeFileSync(target,html);
 };
 const socialLinks=()=>site.socials?.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer"><i class="${esc(s.icon||"fa-solid fa-link")}"></i>${esc(s.label)}</a>`).join("")||"";
+const sri=(file)=>"sha384-"+crypto.createHash("sha384").update(fs.readFileSync(path.join(ROOT,file))).digest("base64");
+const SITE_CSS_SRI=sri("assets/css/site.css");
+const SITE_JS_SRI=sri("assets/js/site.js");
+const FONT_AWESOME_SRI="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==";
 
 function structured(title,description,route,type="WebPage"){
   return JSON.stringify({"@context":"https://schema.org","@graph":[
@@ -44,7 +55,12 @@ function structured(title,description,route,type="WebPage"){
 }
 function head({title,description,route="/",type="WebPage"}){
   const full=title===site.name?site.seo.title:`${title} | ${site.name}`;
-  const json=structured(full,description,route,type);
+  const json=structured(full,description,route,type)
+    .replace(/</g,"\\u003c")
+    .replace(/>/g,"\\u003e")
+    .replace(/&/g,"\\u0026")
+    .replace(/\u2028/g,"\\u2028")
+    .replace(/\u2029/g,"\\u2029");
   const hash=crypto.createHash("sha256").update(json).digest("base64");
   const canonical=absolute(route);
   return `<head>
@@ -52,17 +68,18 @@ function head({title,description,route="/",type="WebPage"}){
 <title>${esc(full)}</title><meta name="description" content="${esc(description)}">
 <meta name="keywords" content="${esc((site.seo.keywords||[]).join(", "))}">
 <meta name="author" content="${esc(site.name)}"><meta name="theme-color" content="#BA0C2F">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/svg+xml" href="${href("/assets/favicon.svg")}">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="${esc(canonical)}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="${esc(full)}"><meta name="twitter:description" content="${esc(description)}">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'sha256-${hash}'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; form-action 'self' mailto:; upgrade-insecure-requests">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-<link rel="stylesheet" href="${href("/assets/css/site.css")}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' 'sha256-${hash}'; script-src-attr 'none'; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; form-action 'none'; require-trusted-types-for 'script'; upgrade-insecure-requests">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="${FONT_AWESOME_SRI}" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="${href("/assets/css/site.css")}" integrity="${SITE_CSS_SRI}">
 <script type="application/ld+json">${json}</script>
-<script src="${href("/assets/js/site.js")}" defer></script>
+<script src="${href("/assets/js/site.js")}" integrity="${SITE_JS_SRI}" defer></script>
 </head>`;
 }
 function header(route){
@@ -229,7 +246,7 @@ function publicationPage(p){
 function pageHero(kicker,title,text){return `<section class="tl-page-hero" data-size="full"><span class="tl-kicker">${esc(kicker)}</span><h1>${esc(title)}</h1><p>${esc(text)}</p></section>`}
 
 const constellation=`<div class="tl-constellation tl-constellation--light reveal" data-delay="120" data-constellation aria-label="Animated orbital map of Thomas Lab research areas"><div class="tl-constellation__halo"></div><div class="tl-orbit tl-orbit--outer"></div><div class="tl-orbit tl-orbit--middle"></div><div class="tl-orbit tl-orbit--inner"></div><svg class="tl-network" viewBox="0 0 620 620" aria-hidden="true"><g class="network-lines"><path d="M310 310 L118 155"/><path d="M310 310 L492 146"/><path d="M310 310 L524 349"/><path d="M310 310 L410 511"/><path d="M310 310 L111 438"/></g><g class="network-pulses"><circle cx="118" cy="155" r="5"/><circle cx="492" cy="146" r="5"/><circle cx="524" cy="349" r="5"/><circle cx="410" cy="511" r="5"/><circle cx="111" cy="438" r="5"/></g></svg><div class="tl-core" data-core-magnet><span>THOMAS</span><strong>LAB</strong><small>precision therapeutics</small></div>
-${[["Pharmacogenomics","fa-solid fa-dna",1,"27s","-4s","8%"],["Clinical NLP","fa-solid fa-file-waveform",2,"33s","-16s","15%"],["Medication Safety","fa-solid fa-shield-heart",3,"29s","-20s","8%"],["Real-World Evidence","fa-solid fa-chart-line",4,"36s","-28s","16%"],["Cardiovascular","fa-solid fa-heart-pulse",5,"31s","-10s","11%"]].map(([n,i,k,t,d,ins])=>`<div class="tl-planet tl-planet--${k}" style="--orbit-time:${t};--orbit-delay:${d};--orbit-inset:${ins};"><div class="tl-planet__counter"><div class="tl-node"><i class="${i}"></i><span>${n}</span></div></div></div>`).join("")}<div class="tl-constellation__cursor"></div></div>`;
+${[["Pharmacogenomics","fa-solid fa-dna",1],["Clinical NLP","fa-solid fa-file-waveform",2],["Medication Safety","fa-solid fa-shield-heart",3],["Real-World Evidence","fa-solid fa-chart-line",4],["Cardiovascular","fa-solid fa-heart-pulse",5]].map(([n,i,k])=>`<div class="tl-planet tl-planet--${k}"><div class="tl-planet__counter"><div class="tl-node"><i class="${i}"></i><span>${n}</span></div></div></div>`).join("")}<div class="tl-constellation__cursor"></div></div>`;
 
 const homeResearch=site.research_areas.map((a,i)=>`<article id="${esc(slugify(a.title))}" class="tl-research-card tl-hover-card reveal" data-tilt data-spotlight data-delay="${i*65}"><div class="tl-research-card__top"><span>${esc(a.number)}</span><i class="${esc(a.icon)}"></i></div><h3>${esc(a.title)}</h3><p>${esc(a.description)}</p><a class="tl-research-card__link" href="${href("/research/#"+slugify(a.title)+"-detail")}" aria-label="Explore ${esc(a.title)}">Explore area <i class="fa-solid fa-arrow-right"></i></a><div class="tl-research-card__line"></div></article>`).join("");
 const hero=`<section class="tl-hero tl-hero--light" data-size="full"><div class="tl-hero__wash tl-hero__wash--red"></div><div class="tl-hero__wash tl-hero__wash--blue"></div><div class="tl-hero__gridline"></div><div class="tl-hero__inner"><div class="tl-hero__copy reveal"><div class="tl-affiliation-pill"><span></span>${esc(site.affiliation)}</div><div class="tl-eyebrow"><span></span>${esc(site.hero.eyebrow)}</div><h1>${esc(site.hero.title_prefix)} <em>${esc(site.hero.title_highlight)}</em></h1><p>${esc(site.hero.summary)}</p><div class="tl-actions"><a class="tl-button tl-button--primary" href="${href(site.hero.primary_href)}">${esc(site.hero.primary_label)} <i class="fa-solid fa-arrow-right"></i></a><a class="tl-button tl-button--ghost" href="${href(site.hero.secondary_href)}">${esc(site.hero.secondary_label)}</a></div><div class="tl-hero__proof tl-discovery-rail" aria-label="Thomas Lab research pathways"><span class="tl-discovery-rail__track" aria-hidden="true"><b></b></span><a href="${href("/research/#pharmacogenomics-detail")}" class="tl-discovery-card"><span class="tl-discovery-card__icon"><i class="fa-solid fa-dna"></i></span><span class="tl-discovery-card__copy"><small>01 · Genomics</small><strong>Pharmacogenomics</strong><em>Genotype-informed therapeutics</em></span><span class="tl-discovery-card__action">Explore <i class="fa-solid fa-arrow-right"></i></span></a><a href="${href("/research/#clinical-nlp-detail")}" class="tl-discovery-card"><span class="tl-discovery-card__icon"><i class="fa-solid fa-file-waveform"></i></span><span class="tl-discovery-card__copy"><small>02 · Clinical data</small><strong>Clinical AI + NLP</strong><em>Notes to validated phenotypes</em></span><span class="tl-discovery-card__action">Explore <i class="fa-solid fa-arrow-right"></i></span></a><a href="${href("/research/#real-world-evidence-detail")}" class="tl-discovery-card"><span class="tl-discovery-card__icon"><i class="fa-solid fa-chart-line"></i></span><span class="tl-discovery-card__copy"><small>03 · Translation</small><strong>Real-world evidence</strong><em>Care pathways to outcomes</em></span><span class="tl-discovery-card__action">Explore <i class="fa-solid fa-arrow-right"></i></span></a></div></div>${constellation}</div></section>`;
@@ -277,6 +294,16 @@ const sitemap='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www
   '\n</urlset>\n';
 fs.writeFileSync(path.join(OUT,"sitemap.xml"),sitemap);
 fs.writeFileSync(path.join(OUT,"robots.txt"),'User-agent: *\nAllow: /\nSitemap: '+absolute("/sitemap.xml")+'\n');
+ensure(path.join(OUT,".well-known"));
+fs.writeFileSync(path.join(OUT,".well-known/security.txt"),[
+  "Contact: mailto:"+site.email,
+  "Canonical: "+absolute("/.well-known/security.txt"),
+  "Policy: "+absolute("/SECURITY.md"),
+  "Preferred-Languages: en",
+  "Expires: 2027-09-27T23:59:59.000Z",
+  ""
+].join("\n"));
+fs.copyFileSync(path.join(ROOT,"SECURITY.md"),path.join(OUT,"SECURITY.md"));
 
 const rssItems=[...news].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20).map(item=>
   '<item><title>'+xmlEsc(item.title)+'</title><link>'+xmlEsc(absolute("/news/"+item.slug+"/"))+'</link><guid>'+xmlEsc(absolute("/news/"+item.slug+"/"))+'</guid><pubDate>'+new Date(item.date+"T12:00:00Z").toUTCString()+'</pubDate><description>'+xmlEsc(item.description)+'</description></item>'
