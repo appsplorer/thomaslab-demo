@@ -52,6 +52,7 @@ function head({title,description,route="/",type="WebPage"}){
 <title>${esc(full)}</title><meta name="description" content="${esc(description)}">
 <meta name="keywords" content="${esc((site.seo.keywords||[]).join(", "))}">
 <meta name="author" content="${esc(site.name)}"><meta name="theme-color" content="#BA0C2F">
+<link rel="icon" type="image/svg+xml" href="${href("/assets/favicon.svg")}">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="${esc(canonical)}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="${esc(site.name)}">
@@ -264,6 +265,7 @@ write("404.html",`<!doctype html><html lang="en">${head({title:"Page not found",
 ensure(path.join(OUT,"assets/css")); ensure(path.join(OUT,"assets/js"));
 fs.copyFileSync(path.join(ROOT,"assets/css/site.css"),path.join(OUT,"assets/css/site.css"));
 fs.copyFileSync(path.join(ROOT,"assets/js/site.js"),path.join(OUT,"assets/js/site.js"));
+fs.copyFileSync(path.join(ROOT,"assets/favicon.svg"),path.join(OUT,"assets/favicon.svg"));
 fs.writeFileSync(path.join(OUT,".nojekyll"),"");
 const mediaDir=path.join(ROOT,"media");
 if(fs.existsSync(mediaDir)) fs.cpSync(mediaDir,path.join(OUT,"media"),{recursive:true});
