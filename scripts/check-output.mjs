@@ -63,6 +63,25 @@ for(const file of htmlFiles){
     const target=localTarget(value);
     if(target && !fs.existsSync(target)) fail(path.relative(OUT,file)+" has broken local link: "+value+" -> "+path.relative(OUT,target));
   }
+  const hrefs=[...html.matchAll(/\bhref=["']([^"']+)["']/gi)].map(m=>m[1]);
+  for(const value of hrefs){
+    if(/^(https?:|mailto:|tel:|data:)/i.test(value)) continue;
+    const hashIndex=value.indexOf("#");
+    if(hashIndex<0) continue;
+    const rawHash=value.slice(hashIndex+1);
+    if(!rawHash) continue;
+    const hash=decodeURIComponent(rawHash);
+    const pathPart=value.slice(0,hashIndex);
+    let targetFile=file;
+    if(pathPart){
+      const target=localTarget(pathPart);
+      if(target) targetFile=target;
+    }
+    if(!fs.existsSync(targetFile)) continue;
+    const targetHtml=fs.readFileSync(targetFile,"utf8");
+    const targetIds=[...targetHtml.matchAll(/\bid=["']([^"']+)["']/gi)].map(m=>m[1]);
+    if(!targetIds.includes(hash)) fail(path.relative(OUT,file)+" links to missing anchor #"+hash+" in "+path.relative(OUT,targetFile));
+  }
   for(const tag of html.matchAll(/<a\b[^>]*target=["']_blank["'][^>]*>/gi)){
     if(!/rel=["'][^"']*noopener[^"']*noreferrer[^"']*["']/i.test(tag[0])) fail(path.relative(OUT,file)+" has target=_blank without noopener noreferrer");
   }
