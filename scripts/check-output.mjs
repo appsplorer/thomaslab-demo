@@ -59,8 +59,12 @@ for(const file of htmlFiles){
     if(!csp[0][0].includes(directive)) fail(path.relative(OUT,file)+" CSP is missing: "+directive);
   }
   if(!/<meta\b[^>]*name=["']referrer["'][^>]*content=["']strict-origin-when-cross-origin["']/i.test(html)) fail(path.relative(OUT,file)+" is missing the referrer policy meta tag");
-  const faLink=html.match(/<link\b[^>]*href=["']https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.7\.2\/css\/all\.min\.css["'][^>]*>/i)?.[0]||"";
-  if(!faLink || !/integrity=["']sha512-[^"']+["']/i.test(faLink) || !/crossorigin=["']anonymous["']/i.test(faLink)) fail(path.relative(OUT,file)+" Font Awesome stylesheet is missing SRI/crossorigin");
+  if(!csp[0][0].includes("style-src 'self'") || !csp[0][0].includes("font-src 'self'")) fail(path.relative(OUT,file)+" CSP must keep styles and fonts same-origin");
+  for(const tag of html.matchAll(/<(?:script|link)\b[^>]*(?:src|href)=["']https?:\/\/[^"']+["'][^>]*>/gi)){
+    fail(path.relative(OUT,file)+" contains a third-party runtime script/stylesheet: "+tag[0]);
+  }
+  const faLink=html.match(/<link\b[^>]*href=["'][^"']*\/assets\/vendor\/fontawesome\/css\/all\.min\.css["'][^>]*>/i)?.[0]||"";
+  if(!faLink || !/integrity=["']sha384-[^"']+["']/i.test(faLink)) fail(path.relative(OUT,file)+" self-hosted Font Awesome stylesheet is missing SRI");
   const localCss=html.match(/<link\b[^>]*href=["'][^"']*\/assets\/css\/site\.css["'][^>]*>/i)?.[0]||"";
   if(!localCss || !/integrity=["']sha384-[^"']+["']/i.test(localCss)) fail(path.relative(OUT,file)+" local stylesheet is missing SRI");
   const localJs=html.match(/<script\b[^>]*src=["'][^"']*\/assets\/js\/site\.js["'][^>]*>/i)?.[0]||"";
@@ -115,7 +119,7 @@ for(const file of htmlFiles){
     if(!/\balt=["'][^"']*["']/i.test(tag[0])) fail(path.relative(OUT,file)+" has image without alt attribute");
   }
 }
-for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg","SECURITY.md",".well-known/security.txt"]){
+for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg","assets/vendor/fontawesome/css/all.min.css","assets/vendor/fontawesome/webfonts/fa-brands-400.woff2","assets/vendor/fontawesome/webfonts/fa-regular-400.woff2","assets/vendor/fontawesome/webfonts/fa-solid-900.woff2","assets/vendor/fontawesome/webfonts/fa-v4compatibility.woff2","SECURITY.md",".well-known/security.txt"]){
   if(!fs.existsSync(path.join(OUT,required))) fail("Missing generated asset: "+required);
 }
 const js=fs.readFileSync(path.join(OUT,"assets/js/site.js"),"utf8");
@@ -126,6 +130,11 @@ if(/sourceMappingURL/i.test(js)) fail("Production JavaScript references a source
 const css=fs.readFileSync(path.join(OUT,"assets/css/site.css"),"utf8");
 if(/@import\s/i.test(css)) fail("Production CSS contains @import; vendor resources must be explicit and CSP-controlled");
 if(/sourceMappingURL/i.test(css)) fail("Production CSS references a source map");
+const faCss=fs.readFileSync(path.join(OUT,"assets/vendor/fontawesome/css/all.min.css"),"utf8");
+if(/https?:\/\//i.test(faCss.replace(/\/\*[\s\S]*?\*\//g,""))) fail("Self-hosted Font Awesome CSS contains a runtime external URL");
+for(const font of ["fa-brands-400.woff2","fa-regular-400.woff2","fa-solid-900.woff2","fa-v4compatibility.woff2"]){
+  if(!faCss.includes("../webfonts/"+font)) fail("Self-hosted Font Awesome CSS does not reference "+font);
+}
 const securityTxt=fs.readFileSync(path.join(OUT,".well-known/security.txt"),"utf8");
 for(const field of ["Contact: mailto:","Canonical: https://","Expires: "]){
   if(!securityTxt.includes(field)) fail("security.txt is missing "+field);
