@@ -5,18 +5,13 @@ media:
     output: /media/images
     rename: safe
     categories: [image]
+    extensions: [jpg, jpeg, png, webp, avif, gif]
   - name: pdfs
     label: Publication PDFs
     input: media/pdfs
     output: /media/pdfs
     rename: safe
     extensions: [pdf]
-  - name: documents
-    label: Documents
-    input: media/documents
-    output: /media/documents
-    rename: safe
-    categories: [document]
 
 content:
   - name: site
