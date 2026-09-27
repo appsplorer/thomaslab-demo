@@ -60,7 +60,10 @@ content:
           - name: icon
             type: string
             description: Font Awesome class, for example fa-solid fa-dna
-          - { name: description, type: text }
+          - { name: description, label: Card description, type: text }
+          - { name: long_description, label: Full research-area description, type: text }
+          - { name: methods, label: Methods / approaches, type: string, list: true }
+          - { name: project_slugs, label: Related project slugs, type: string, list: true, description: "Use project slugs from the Projects editor." }
       - name: socials
         label: Lab social / profile links
         type: object
