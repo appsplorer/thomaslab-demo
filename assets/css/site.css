@@ -2343,3 +2343,11 @@ main > section.tl-page-shell.tl-page-shell.tl-page-shell--narrow{
     font-size:1rem;
   }
 }
+
+
+/* ===== Security QA: static orbit variables (no inline style attributes) ===== */
+.tl-planet--1{--orbit-time:27s;--orbit-delay:-4s;--orbit-inset:8%}
+.tl-planet--2{--orbit-time:33s;--orbit-delay:-16s;--orbit-inset:15%}
+.tl-planet--3{--orbit-time:29s;--orbit-delay:-20s;--orbit-inset:8%}
+.tl-planet--4{--orbit-time:36s;--orbit-delay:-28s;--orbit-inset:16%}
+.tl-planet--5{--orbit-time:31s;--orbit-delay:-10s;--orbit-inset:11%}
