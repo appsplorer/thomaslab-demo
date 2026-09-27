@@ -4,6 +4,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      payload:
+        description: Optional Pages CMS action payload
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -18,17 +24,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
       - name: Configure GitHub Pages
         id: pages
         uses: actions/configure-pages@v5
+      - name: Validate source
+        run: |
+          node --check scripts/build.mjs
+          node scripts/check.mjs
       - name: Build static site
         env:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
           SITE_ORIGIN: ${{ steps.pages.outputs.origin }}
-        run: node scripts/build.mjs
+        run: |
+          node scripts/build.mjs
+          node scripts/check-output.mjs
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

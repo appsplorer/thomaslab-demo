@@ -1,0 +1,11 @@
+{
+  "name": "thomas-lab-website",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "check": "node --check scripts/build.mjs && node scripts/check.mjs",
+    "build": "node scripts/build.mjs",
+    "check:output": "node scripts/check-output.mjs"
+  }
+}

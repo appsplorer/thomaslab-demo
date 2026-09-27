@@ -1,0 +1,337 @@
+media:
+  - name: images
+    label: Images
+    input: media/images
+    output: /media/images
+    rename: safe
+    categories: [image]
+  - name: pdfs
+    label: Publication PDFs
+    input: media/pdfs
+    output: /media/pdfs
+    rename: safe
+    extensions: [pdf]
+  - name: documents
+    label: Documents
+    input: media/documents
+    output: /media/documents
+    rename: safe
+    categories: [document]
+
+content:
+  - name: site
+    label: Site settings
+    type: file
+    path: data/site.json
+    format: json
+    fields:
+      - { name: name, label: Lab name, type: string, required: true }
+      - { name: short_name, label: Short name, type: string }
+      - { name: affiliation, type: string, required: true }
+      - { name: department, type: string }
+      - { name: university, type: string }
+      - { name: location, type: string }
+      - { name: email, type: string, required: true }
+      - { name: phone, type: string }
+      - { name: office, type: string }
+      - { name: tagline, type: text }
+      - { name: site_url, label: Production URL, type: string, required: true }
+      - name: hero
+        type: object
+        fields:
+          - { name: eyebrow, type: string }
+          - { name: title_prefix, label: Title first line, type: string }
+          - { name: title_highlight, label: Highlighted title, type: string }
+          - { name: summary, type: text }
+          - { name: primary_label, type: string }
+          - { name: primary_href, type: string }
+          - { name: secondary_label, type: string }
+          - { name: secondary_href, type: string }
+      - name: research_areas
+        label: Research areas
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{number} · {title}"
+        fields:
+          - { name: number, type: string }
+          - { name: title, type: string, required: true }
+          - name: icon
+            type: string
+            description: Font Awesome class, for example fa-solid fa-dna
+          - { name: description, type: text }
+      - name: socials
+        label: Lab social / profile links
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
+        fields:
+          - { name: label, type: string, required: true }
+          - { name: url, type: string, required: true }
+          - name: icon
+            type: string
+            description: Font Awesome class, e.g. fa-brands fa-linkedin
+      - name: seo
+        label: SEO
+        type: object
+        fields:
+          - { name: title, type: string, required: true }
+          - { name: description, type: text, required: true }
+          - { name: keywords, type: string, list: true }
+
+  - name: publications
+    label: Publications
+    type: file
+    path: data/publications.json
+    format: json
+    list: true
+    fields:
+      - name: slug
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          message: Use lowercase letters, numbers and hyphens only.
+      - { name: year, type: number, required: true }
+      - { name: title, type: string, required: true }
+      - { name: venue, type: string, required: true }
+      - { name: authors, type: text, required: true }
+      - { name: type, label: Publication type, type: string }
+      - { name: doi, label: DOI, type: string }
+      - { name: pubmed, label: PubMed URL, type: string }
+      - { name: external_url, label: Title / external publication URL, type: string, required: true }
+      - name: pdf
+        label: Full-text PDF
+        type: file
+        description: Upload only when the lab has the right to distribute the PDF.
+        options:
+          media: pdfs
+          extensions: [pdf]
+          rename: safe
+      - { name: summary, type: text }
+      - { name: topics, type: string, list: true }
+      - { name: featured, type: boolean, default: false }
+
+  - name: people
+    label: People & alumni
+    type: file
+    path: data/people.json
+    format: json
+    list: true
+    fields:
+      - name: slug
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          message: Use lowercase letters, numbers and hyphens only.
+      - { name: name, type: string, required: true }
+      - { name: credentials, type: string }
+      - name: role
+        type: select
+        required: true
+        options:
+          values:
+            - { name: principal-investigator, label: Principal Investigator }
+            - { name: faculty, label: Faculty }
+            - { name: postdoc, label: Postdoctoral Researcher }
+            - { name: phd-student, label: PhD Student }
+            - { name: research-assistant, label: Research Assistant }
+            - { name: student, label: Student Researcher }
+            - { name: collaborator, label: Collaborator }
+            - { name: staff, label: Staff }
+            - { name: alumni, label: Alumni / Past Student }
+      - { name: role_label, label: Public role label, type: string }
+      - { name: position, type: string }
+      - { name: affiliation, type: text }
+      - name: photo
+        type: image
+        options:
+          media: images
+          rename: safe
+      - { name: email, type: string }
+      - { name: phone, type: string }
+      - { name: office, type: string }
+      - { name: research_topics, type: string, list: true }
+      - { name: short_bio, label: Short biography, type: text }
+      - name: bio_html
+        label: Full biography
+        type: rich-text
+        options:
+          format: html
+          media: images
+          rename: safe
+      - name: education
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
+        fields:
+          - { name: label, type: string }
+          - { name: detail, type: string }
+      - name: links
+        label: Social & professional links
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
+        fields:
+          - { name: label, type: string, required: true }
+          - { name: url, type: string, required: true }
+          - name: icon
+            type: string
+            description: Examples: fa-brands fa-linkedin, fa-brands fa-orcid, fa-brands fa-github
+      - { name: start_year, type: number }
+      - { name: end_year, label: End year (alumni), type: number }
+      - { name: next_position, label: Next position (alumni), type: string }
+      - { name: featured, type: boolean, default: false }
+
+  - name: projects
+    label: Projects
+    type: file
+    path: data/projects.json
+    format: json
+    list: true
+    fields:
+      - name: slug
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          message: Use lowercase letters, numbers and hyphens only.
+      - { name: title, type: string, required: true }
+      - { name: subtitle, type: string }
+      - { name: status, type: string, required: true }
+      - name: icon
+        type: string
+        description: Font Awesome class used when no image is uploaded.
+      - name: image
+        type: image
+        options:
+          media: images
+          rename: safe
+      - { name: short_description, label: Card description, type: text, required: true }
+      - { name: summary, label: Detail-page summary, type: text }
+      - name: body_html
+        label: Full project description
+        type: rich-text
+        options:
+          format: html
+          media: images
+          rename: safe
+      - { name: goals, type: string, list: true }
+      - { name: methods, type: string, list: true }
+      - { name: topics, type: string, list: true }
+      - name: links
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
+        fields:
+          - { name: label, type: string }
+          - { name: url, type: string }
+      - name: related_publications
+        label: Related publication slugs
+        type: string
+        list: true
+        description: Use publication slugs from the Publications editor.
+      - { name: featured, type: boolean, default: false }
+
+  - name: news
+    label: News
+    type: file
+    path: data/news.json
+    format: json
+    list: true
+    fields:
+      - name: slug
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          message: Use lowercase letters, numbers and hyphens only.
+      - name: date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: category
+        type: select
+        options:
+          values: [Lab Update, Publication, Media, Conference, Award, Talk, Announcement]
+      - { name: title, type: string, required: true }
+      - { name: description, type: text, required: true }
+      - name: image
+        type: image
+        options:
+          media: images
+          rename: safe
+      - { name: author, type: string }
+      - { name: tags, type: string, list: true }
+      - name: body_html
+        label: Full article
+        type: rich-text
+        options:
+          format: html
+          media: images
+          rename: safe
+      - { name: external_url, label: External news / source URL, type: string }
+      - { name: external_label, label: External source label, type: string }
+      - { name: featured, type: boolean, default: false }
+
+  - name: opportunities
+    label: Opportunities
+    type: file
+    path: data/opportunities.json
+    format: json
+    list: true
+    fields:
+      - name: slug
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          message: Use lowercase letters, numbers and hyphens only.
+      - { name: title, type: string, required: true }
+      - name: type
+        type: select
+        options:
+          values: [PhD, Postdoctoral Researcher, Research Assistant, Student Research, Staff, Collaboration, Other]
+      - { name: status, type: string, required: true }
+      - { name: location, type: string }
+      - { name: commitment, type: string }
+      - name: posted_date
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - { name: deadline, type: string }
+      - { name: summary, type: text, required: true }
+      - name: body_html
+        label: Full opportunity description
+        type: rich-text
+        options:
+          format: html
+          media: images
+          rename: safe
+      - { name: qualifications, type: string, list: true }
+      - { name: how_to_apply, type: string, list: true }
+      - { name: contact_email, type: string }
+      - { name: external_apply_url, label: External application URL, type: string }
+      - { name: featured, type: boolean, default: false }
+
+actions:
+  - name: deploy-site
+    label: Rebuild / deploy website
+    workflow: deploy.yml
+    ref: current
+    cancelable: false
+    confirm:
+      title: Rebuild Thomas Lab website?
+      message: This triggers the production GitHub Pages workflow.
+      button: Deploy
