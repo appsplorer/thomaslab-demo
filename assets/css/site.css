@@ -1151,3 +1151,17 @@ main > section.tl-page-shell.tl-page-shell.tl-page-shell--narrow{
     padding-right:28px;
   }
 }
+
+
+/* ===== Final QA pass 3: publication detail min-content containment ===== */
+.tl-publication-detail__grid,
+.tl-publication-detail__main,
+.tl-publication-detail__grid aside{
+  min-width:0;
+}
+.tl-citation-box,
+.tl-publication-detail__main p,
+.tl-publication-detail__authors{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
