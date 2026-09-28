@@ -81,7 +81,9 @@ for(const file of htmlFiles){
   const footerCount=(html.match(/<footer\b[^>]*class=["'][^"']*tl-footer/gi)||[]).length;
   const drawerCount=(html.match(/id=["']tl-mobile-drawer["']/gi)||[]).length;
   const backTopCount=(html.match(/\bdata-backtop\b/gi)||[]).length;
-  if(headerCount!==1 || footerCount!==1 || drawerCount!==1 || backTopCount!==1) fail(path.relative(OUT,file)+" must contain exactly one shared header, footer, mobile drawer and back-to-top control");
+  if(headerCount!==1 || footerCount!==1 || drawerCount!==1) fail(path.relative(OUT,file)+" must contain exactly one shared header, footer and mobile drawer");
+  const is404=path.basename(file)==="404.html";
+  if((is404 && backTopCount!==0) || (!is404 && backTopCount!==1)) fail(path.relative(OUT,file)+" has an inconsistent back-to-top control count");
   const mainCount=(html.match(/<main\b/gi)||[]).length;
   const mainCloseCount=(html.match(/<\/main>/gi)||[]).length;
   if(mainCount!==1) fail(path.relative(OUT,file)+" must contain exactly one main landmark, found "+mainCount);
