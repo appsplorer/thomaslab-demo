@@ -30,6 +30,7 @@
   /* ---------- pause continuous decorative motion when off-screen ---------- */
   if ('IntersectionObserver' in window && !isReduced()) {
     const motionTargets = [...document.querySelectorAll([
+      '.tl-hero',
       '.tl-constellation',
       '.tl-page-hero',
       '.tl-project-signal',
@@ -48,12 +49,17 @@
     }
   }
 
+  /* Pause every decorative animation while the tab is hidden. */
+  const syncDocumentMotion = () => doc.classList.toggle('tl-motion-paused', document.hidden);
+  syncDocumentMotion();
+  document.addEventListener('visibilitychange', syncDocumentMotion);
+
   /* ---------- hero constellation pointer field ---------- */
   const constellation = document.querySelector('[data-constellation]');
   if (constellation && finePointer.matches && !isReduced()) {
     let frame = 0;
     const update = (event) => {
-      if (frame) return;
+      if (isReduced() || frame) return;
       frame = window.requestAnimationFrame(() => {
         frame = 0;
         const rect = constellation.getBoundingClientRect();
@@ -85,7 +91,7 @@
     document.querySelectorAll('[data-spotlight]').forEach((card) => {
       let frame = 0;
       const onMove = (event) => {
-        if (frame) return;
+        if (isReduced() || frame) return;
         frame = window.requestAnimationFrame(() => {
           frame = 0;
           const rect = card.getBoundingClientRect();

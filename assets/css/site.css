@@ -266,9 +266,6 @@ main > section:not(.tl-hero):not(.tl-join) { width:100%; }
 .tl-footer__links a { color:#bbb!important; font-size:.74rem; text-decoration:none; }.tl-footer__links a:hover{color:#fff!important}
 .tl-footer__signal { position:relative; min-height:125px; padding:48px 0 0 12px; overflow:hidden; }
 .tl-footer__signal strong,.tl-footer__signal small{position:relative;z-index:2;display:block}.tl-footer__signal strong{font-family:var(--title);font-size:.92rem}.tl-footer__signal small{margin-top:5px;color:#666;font-size:.62rem}
-.signal-line { position:absolute; left:13px; right:10px; top:29px; height:1px; background:linear-gradient(90deg,var(--uga-red),rgba(255,255,255,.08)); }
-.signal-dot { position:absolute; top:25px; width:9px; height:9px; border-radius:50%; background:var(--uga-red); box-shadow:0 0 16px rgba(228,0,43,.7); }
-.signal-dot--1{left:12px}.signal-dot--2{left:45%;animation:pulseDot 2s infinite}.signal-dot--3{right:9px;animation:pulseDot 2s .8s infinite}
 .tl-footer__bottom { display:grid; grid-template-columns:1fr 2fr 1fr; gap:28px; margin-top:62px; padding-top:24px; border-top:1px solid rgba(255,255,255,.08); color:#555; font-size:.58rem; }
 .tl-footer__bottom span:nth-child(2){text-align:center}.tl-footer__bottom span:last-child{text-align:right}
 
@@ -802,7 +799,7 @@ main { background:var(--tl-ivory); }
 .tl-footer--light .tl-footer__identity .tl-footer__affiliation { color:#8b847c; }
 .tl-footer--light .tl-footer__links span { color:#9a9289; }
 .tl-footer--light .tl-footer__links a { color:#57514b!important; }.tl-footer--light .tl-footer__links a:hover{color:var(--uga-red)!important}
-.tl-footer--light .tl-footer__signal strong { color:#24201d; }.tl-footer--light .tl-footer__signal small{color:#817a73}.tl-footer--light .signal-line{background:rgba(85,79,71,.18)}
+.tl-footer--light .tl-footer__signal strong { color:#24201d; }.tl-footer--light .tl-footer__signal small{color:#817a73}
 .tl-footer--light .tl-footer__bottom { border-color:#ddd7cf; color:#8e867e; }
 
 /* lighter focus rings on light surfaces */

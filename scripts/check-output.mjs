@@ -77,6 +77,11 @@ for(const file of htmlFiles){
   if(!localCss || !/integrity=["']sha384-[^"']+["']/i.test(localCss)) fail(path.relative(OUT,file)+" local stylesheet is missing SRI");
   const localJs=html.match(/<script\b[^>]*src=["'][^"']*\/assets\/js\/site\.js["'][^>]*>/i)?.[0]||"";
   if(!localJs || !/integrity=["']sha384-[^"']+["']/i.test(localJs)) fail(path.relative(OUT,file)+" local JavaScript is missing SRI");
+  const headerCount=(html.match(/<header\b[^>]*class=["'][^"']*tl-header/gi)||[]).length;
+  const footerCount=(html.match(/<footer\b[^>]*class=["'][^"']*tl-footer/gi)||[]).length;
+  const drawerCount=(html.match(/id=["']tl-mobile-drawer["']/gi)||[]).length;
+  const backTopCount=(html.match(/\bdata-backtop\b/gi)||[]).length;
+  if(headerCount!==1 || footerCount!==1 || drawerCount!==1 || backTopCount!==1) fail(path.relative(OUT,file)+" must contain exactly one shared header, footer, mobile drawer and back-to-top control");
   const mainCount=(html.match(/<main\b/gi)||[]).length;
   const mainCloseCount=(html.match(/<\/main>/gi)||[]).length;
   if(mainCount!==1) fail(path.relative(OUT,file)+" must contain exactly one main landmark, found "+mainCount);
@@ -159,6 +164,9 @@ if(siteData.gallery?.enabled===false && /id=["']lab-life["']/.test(homeHtml)) fa
 if(siteData.gallery?.enabled!==false && !/id=["']lab-life["']/.test(homeHtml)) fail("Homepage gallery is enabled but missing");
 if(expectedGalleryPhotos>0 && !/\bdata-gallery-lightbox\b/.test(homeHtml)) fail("Homepage gallery photos exist but the lightbox is missing");
 if(expectedGalleryPhotos===0 && /\bdata-gallery-lightbox\b/.test(homeHtml)) fail("Homepage gallery lightbox should not render without photos");
+const publicationsHtml=fs.readFileSync(path.join(OUT,"publications","index.html"),"utf8");
+if(!/aria-live=["']polite["'][^>]*aria-atomic=["']true["']/.test(publicationsHtml)) fail("Publication result count must expose polite live feedback");
+if(!/data-publication-empty[^>]*role=["']status["'][^>]*aria-live=["']polite["']/.test(publicationsHtml)) fail("Publication empty state must be announced as a polite status");
 
 for(const required of ["sitemap.xml","robots.txt","feed.xml","assets/css/site.css","assets/js/site.js","assets/favicon.svg","assets/vendor/fontawesome/css/all.min.css","assets/vendor/fontawesome/webfonts/fa-brands-400.woff2","assets/vendor/fontawesome/webfonts/fa-regular-400.woff2","assets/vendor/fontawesome/webfonts/fa-solid-900.woff2","assets/vendor/fontawesome/webfonts/fa-v4compatibility.woff2","SECURITY.md",".well-known/security.txt"]){
   if(!fs.existsSync(path.join(OUT,required))) fail("Missing generated asset: "+required);
@@ -173,9 +181,14 @@ if(/sourceMappingURL/i.test(js)) fail("Production JavaScript references a source
 const css=fs.readFileSync(path.join(OUT,"assets/css/site.css"),"utf8");
 if(/@import\s/i.test(css)) fail("Production CSS contains @import; vendor resources must be explicit and CSP-controlled");
 if(/sourceMappingURL/i.test(css)) fail("Production CSS references a source map");
-for(const requiredMotion of ["@keyframes tlOrbitSpin","@keyframes tlOrbitSpinReverse",".tl-motion-paused","@media(prefers-reduced-motion:reduce)"]){
-  if(!css.includes(requiredMotion)) fail("Production CSS is missing motion safeguard: "+requiredMotion);
+for(const requiredMotion of ["@keyframes tlOrbitSpin","@keyframes tlOrbitSpinReverse","@keyframes tlGenericOrbitNode",".tl-motion-paused","@media(prefers-reduced-motion:reduce)",".tl-footer-orbit__ring--outer",".tl-project-signal>span:nth-of-type(3)",".tl-gallery-empty__signal i:nth-child(1)",".tl-research-detail__orbit:before"]){
+  if(!css.includes(requiredMotion)) fail("Production CSS is missing motion safeguard/component: "+requiredMotion);
 }
+for(const deadLegacy of [".signal-line",".signal-dot--1",".signal-dot--2",".signal-dot--3"]){
+  if(css.includes(deadLegacy)) fail("Production CSS still contains obsolete footer motion selector: "+deadLegacy);
+}
+if(!js.includes("visibilitychange") || !js.includes("syncDocumentMotion")) fail("Production JavaScript must pause decorative motion while the document is hidden");
+if(!js.includes("'.tl-hero'")) fail("Homepage hero must participate in off-screen motion pausing");
 const faCss=fs.readFileSync(path.join(OUT,"assets/vendor/fontawesome/css/all.min.css"),"utf8");
 if(/https?:\/\//i.test(faCss.replace(/\/\*[\s\S]*?\*\//g,""))) fail("Self-hosted Font Awesome CSS contains a runtime external URL");
 for(const font of ["fa-brands-400.woff2","fa-regular-400.woff2","fa-solid-900.woff2","fa-v4compatibility.woff2"]){
